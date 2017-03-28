@@ -1,6 +1,8 @@
 var express = require('express');
 var app = express();
 var cors = require('cors');
+var config = require('../config');
+
 app.use(cors());
 
 var Promise    = require('bluebird');
@@ -8,14 +10,11 @@ var _ = require('lodash');
 var promisify = require("promisify-node");
 var fs = promisify("fs");
 
-//var docRoot = "/home/mkm/virtuals/mike/httpdocs/photo/album/1977/";
-var docRoot = "/Users/mkm/www/panode/srv/albums";
-process.chdir(docRoot);
+process.chdir(config.apiDocroot);
 
 app.get('/', function(req, res) {
 	res.send('Hello, world!\n');
 });
-
 
 // Handle just /query/
 app.get('/query/', function(req, res) {
