@@ -1,14 +1,17 @@
 var express = require('express');
 var app = express();
 var cors = require('cors');
+
 var config = require('../config');
+
+console.log('config',config);
 
 app.use(cors());
 
 var Promise    = require('bluebird');
-var _ = require('lodash');
 var promisify = require("promisify-node");
 var fs = promisify("fs");
+//var _ = require('lodash');
 
 process.chdir(config.apiDocroot);
 

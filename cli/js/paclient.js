@@ -1,7 +1,7 @@
 
-var baseQuery = 'http://mike.makuch.org:10101/query/';
-baseQuery = 'http://localhost:10101/query/';
-var baseUrl = 'http://localhost:10101/';
+//var baseUrl = config.apiServer;
+//var baseQuery = baseUrl + '/query';
+
 
 function mybutton (dir, album, buttonLabel) {
     var link = (dir ? dir+'/' : '') + album['dir'];
@@ -39,11 +39,13 @@ function createBreadcrumbs(arg) {
 function photoalbum(dir) {
 
     console.log('photoalbum',dir);
+console.log('config',config);
 
 
     $("#breadcrumbs").html(createBreadcrumbs(dir));
 
-    var query = baseQuery + dir;
+    var query = config.apiServer + '/query/' + dir;
+console.log('query',query);
 
     $.ajax({url: query, success: function(result) {
 //        console.log('ajax',result);
@@ -52,13 +54,13 @@ function photoalbum(dir) {
             result.results.forEach(function(album) {
 //                console.log(album);
                 // var pic = img['image'].replace('albums/','');
-                tag += mybutton(dir, album, `<img src="` + baseUrl + album['image'] + `" >\n`);
+                tag += mybutton(dir, album, `<img src="` + config.assetsUrl + album['image'] + `" >\n`);
             });
         } else if ("chapter" == result.type) {
             result.results.forEach(function(img) {
 //                console.log(img);
                 // var pic = img['image'].replace('albums/','');
-               tag += `<div class="outerblock"><div class="block"><img src="` + baseUrl + img + `" ></div></div>\n`;
+               tag += `<div class="outerblock"><div class="block"><img src="` + config.assetsUrl + img + `" ></div></div>\n`;
             })
         }
 //        console.log(tag);
