@@ -1,0 +1,11 @@
+*~
+*#*#
+.DS_Store
+.emacs.desktop
+.emacs.desktop.lock
+.gitignore.*
+config.js
+all.js
+albums
+node_modules
+npm-debug.log
