@@ -16,6 +16,7 @@ function mybutton (dir, album, buttonLabel) {
 $(document).ready(function(){
     var dir='';
     photoalbum(dir);
+
 });
 
 function createBreadcrumbs(arg) {
@@ -29,6 +30,9 @@ function createBreadcrumbs(arg) {
 
     return breadcrumbs;
 }
+
+var maxwidth=250;
+var maxheight=180
 
 function photoalbum(dir) {
 
@@ -46,11 +50,70 @@ function photoalbum(dir) {
         } else if ("chapter" == result.type) {
             result.results.forEach(function(img) {
 
-               tag += `<div class="outerblock"><div class="block"><img src="` + config.assetsUrl + img + `" ></div></div>\n`;
+               tag += `
+                <div class="outerblock">
+                    <div class="block">
+                        <img src="` + config.assetsUrl + img + `" >
+                    </div>
+                </div>\n`;
             })
         }
 
         $("#photos").html(tag);
+        adjustCSS();
     }});
 
 };
+
+function adjustCSS() {
+
+    var width = maxwidth+30;
+    var height = maxheight+30;
+
+    $(".outerblock").css("width", width+"px");
+    $(".outerblock").css("height", height+"px");
+
+    width = maxwidth+20;
+    height = maxheight+20;
+
+    $(".photo").css("width", width+"px");
+    $(".photo").css("height", height+"px");
+
+    width = maxwidth+10;
+    height = maxheight+10;
+
+    $(".block").css("width", width+"px");
+    $(".block").css("height", height+"px");
+
+    width = maxwidth;
+    height = maxheight;
+
+    $("img").css("max-width",  width+"px");
+    $("img").css("max-height", height+"px");
+}
+
+function enlargeImages() {
+    maxwidth += 50;
+    maxheight += 50;
+
+    if (maxwidth > 1000) {
+        maxwidth = 1000;
+    }
+    if (maxheight > 1000) {
+        maxheight = 1000;
+    }
+    adjustCSS();
+}
+
+function reduceImages() {
+    maxwidth -= 50;
+    maxheight -= 50;
+
+    if (maxwidth < 50) {
+        maxwidth = 50;
+    }
+    if (maxheight < 50) {
+        maxheight =  50;
+    }
+    adjustCSS();
+}
