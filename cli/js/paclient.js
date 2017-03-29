@@ -1,13 +1,8 @@
 
-//var baseUrl = config.apiServer;
-//var baseQuery = baseUrl + '/query';
-
 
 function mybutton (dir, album, buttonLabel) {
     var link = (dir ? dir+'/' : '') + album['dir'];
-//    console.log('link',link);
 
-    // swap button and block, removes the visible border that comes from the button around the image
     var html = `
         <div class="outerblock">
             <button class="photo" onclick="photoalbum('` + link + `');">
@@ -30,7 +25,6 @@ function createBreadcrumbs(arg) {
     dirs.forEach(function(dir) {
         link += (link ? '/' : '') + dir;
         breadcrumbs += (breadcrumbs ? ' / ' : '') + `<a href="#" onclick="photoalbum('` + link + `');">` + dir + `</a>`;
-        console.log('bc',breadcrumbs);
     });
 
     return breadcrumbs;
@@ -38,32 +32,24 @@ function createBreadcrumbs(arg) {
 
 function photoalbum(dir) {
 
-    console.log('photoalbum',dir);
-console.log('config',config);
-
-
     $("#breadcrumbs").html(createBreadcrumbs(dir));
 
     var query = config.apiServer + '/query/' + dir;
-console.log('query',query);
 
     $.ajax({url: query, success: function(result) {
-//        console.log('ajax',result);
         var tag="";
         if ("album" == result.type) {
             result.results.forEach(function(album) {
-//                console.log(album);
-                // var pic = img['image'].replace('albums/','');
+
                 tag += mybutton(dir, album, `<img src="` + config.assetsUrl + album['image'] + `" >\n`);
             });
         } else if ("chapter" == result.type) {
             result.results.forEach(function(img) {
-//                console.log(img);
-                // var pic = img['image'].replace('albums/','');
+
                tag += `<div class="outerblock"><div class="block"><img src="` + config.assetsUrl + img + `" ></div></div>\n`;
             })
         }
-//        console.log(tag);
+
         $("#photos").html(tag);
     }});
 
