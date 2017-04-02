@@ -1,14 +1,14 @@
 
 
-function mybutton (dir, album, buttonLabel) {
-    var link = (dir ? dir+'/' : '') + album['dir'];
+function mybutton (dir, album, imgTag) {
+    var path = (dir ? dir+'/' : '') + album['dir'];
 
     var html = `
-        <div class="outerblock">
-            <button class="photo" onclick="photoalbum('` + link + `');">
-                <div class="block">` + buttonLabel + `</div>
-                <br>` + link + `
-            </button>
+        <div class="frame">
+            <button class="mat" onclick="photoalbum('` + path + `');">
+                ` + imgTag +
+               `</button><br>`
+               + path +`
         </div>`;
     return html;
 }
@@ -31,8 +31,7 @@ function createBreadcrumbs(arg) {
     return breadcrumbs;
 }
 
-var maxwidth=250;
-var maxheight=180
+
 
 function photoalbum(dir) {
 
@@ -45,15 +44,15 @@ function photoalbum(dir) {
         if ("album" == result.type) {
             result.results.forEach(function(album) {
 
-                tag += mybutton(dir, album, `<img src="` + config.assetsUrl + album['image'] + `" >\n`);
+                tag += mybutton(dir, album, `<img class="photo" src="` + config.assetsUrl + album['image'] + `" >\n`);
             });
         } else if ("chapter" == result.type) {
             result.results.forEach(function(img) {
 
                tag += `
-                <div class="outerblock">
+                <div class="frame">
                     <div class="block">
-                        <img src="` + config.assetsUrl + img + `" >
+                        <img class="photo" src="` + config.assetsUrl + img + `" >
                     </div>
                 </div>\n`;
             })
@@ -65,55 +64,58 @@ function photoalbum(dir) {
 
 };
 
+var basewidth=250;
+var baseheight=180
+
 function adjustCSS() {
 
-    var width = maxwidth+30;
-    var height = maxheight+30;
+    var width = basewidth+80;
+    var height = baseheight+96;
 
-    $(".outerblock").css("width", width+"px");
-    $(".outerblock").css("height", height+"px");
+    $(".frame").css("width", width+"px");
+    $(".frame").css("height", height+"px");
 
-    width = maxwidth+20;
-    height = maxheight+20;
+    width = basewidth+10;
+    height = baseheight+20;
 
-    $(".photo").css("width", width+"px");
-    $(".photo").css("height", height+"px");
+    $(".mat").css("width", width+"px");
+    $(".mat").css("height", height+"px");
 
-    width = maxwidth+10;
-    height = maxheight+10;
-
-    $(".block").css("width", width+"px");
-    $(".block").css("height", height+"px");
-
-    width = maxwidth;
-    height = maxheight;
+    width = basewidth;
+    height = baseheight;
 
     $("img").css("max-width",  width+"px");
     $("img").css("max-height", height+"px");
 }
 
 function enlargeImages() {
-    maxwidth += 50;
-    maxheight += 50;
 
-    if (maxwidth > 1000) {
-        maxwidth = 1000;
+    var pct = 1.25;
+
+    basewidth *= pct;
+    baseheight *= pct;
+
+    if (basewidth > 1000) {
+        basewidth = 1000;
     }
-    if (maxheight > 1000) {
-        maxheight = 1000;
+    if (baseheight > 1000) {
+        baseheight = 1000;
     }
     adjustCSS();
 }
 
 function reduceImages() {
-    maxwidth -= 50;
-    maxheight -= 50;
 
-    if (maxwidth < 50) {
-        maxwidth = 50;
+    var pct = .75;
+
+    basewidth *= pct;
+    baseheight *= pct;
+
+    if (basewidth < 50) {
+        basewidth = 50;
     }
-    if (maxheight < 50) {
-        maxheight =  50;
+    if (baseheight < 50) {
+        baseheight =  50;
     }
     adjustCSS();
 }
