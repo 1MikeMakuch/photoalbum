@@ -1,37 +1,27 @@
 
-
-function mybutton (dir, album, imgTag) {
-    var path = (dir ? dir+'/' : '') + album['dir'];
-
-    var html = `
-        <div class="frame">
-            <button class="mat" onclick="photoalbum('` + path + `');">
-                ` + imgTag +
-               `</button><br>`
-               + path +`
-        </div>`;
-    return html;
-}
-
 $(document).ready(function(){
-    var dir='';
+    var dir='2009';
+    dir='';
     photoalbum(dir);
 
 });
 
 function createBreadcrumbs(arg) {
+    console.log('cB',arg);
     var dirs = arg.split('/');
-    var breadcrumbs = '';
+    var breadcrumbs = `<a href="#" onclick="photoalbum('');">HOME</a>`;
+    if (!arg) {
+        return breadcrumbs;
+    }
     var link = '';
     dirs.forEach(function(dir) {
+        console.log('dir',dir);
         link += (link ? '/' : '') + dir;
         breadcrumbs += (breadcrumbs ? ' / ' : '') + `<a href="#" onclick="photoalbum('` + link + `');">` + dir + `</a>`;
     });
 
     return breadcrumbs;
 }
-
-
 
 function photoalbum(dir) {
 
@@ -40,82 +30,81 @@ function photoalbum(dir) {
     var query = config.apiServer + '/query/' + dir;
 
     $.ajax({url: query, success: function(result) {
-        var tag="";
-        if ("album" == result.type) {
-            result.results.forEach(function(album) {
+        var photos="";
+        var onclick="";
 
-                tag += mybutton(dir, album, `<img class="photo" src="` + config.assetsUrl + album['image'] + `" >\n`);
-            });
-        } else if ("chapter" == result.type) {
-            result.results.forEach(function(img) {
+        result.results.forEach(function(img) {
+            var path = '';
+            var matclass = '';
+            var caption = '';
+            if ("album" == result.type) {
+                path = (dir ? dir+'/' : '') + img['dir'];
+                caption = img['dir'];
+                onclick = ` onclick="photoalbum('` + path + `');" `;
+                img = img['image'];
+                matclass = 'mat matbutton';
 
-               tag += `
-                <div class="frame">
-                    <div class="block">
-                        <img class="photo" src="` + config.assetsUrl + img + `" >
+            } else if ("chapter" == result.type) {
+                onclick = "";
+                matclass = 'mat';
+                caption = img.replace(/.*\//, '');
+            }
+            photos += `
+            <div class="matframe">
+                <div class="buffer">
+                    <div class="${matclass}">
+                        <img class="photo" ${onclick} src="${config.assetsUrl + img}" />
                     </div>
-                </div>\n`;
-            })
-        }
+                </div>
+                <div class="caption">${caption}</div>
+            </div>`;
+        });
 
-        $("#photos").html(tag);
+        $(".photos").html(photos);
         adjustCSS();
-    }});
 
+    }});
 };
 
-var basewidth=250;
-var baseheight=180
+var basewidth=150;
+var baseheight=150;
+var perspective = basewidth / baseheight;
 
 function adjustCSS() {
 
-    var width = basewidth+80;
-    var height = baseheight+96;
-
-    $(".frame").css("width", width+"px");
-    $(".frame").css("height", height+"px");
-
-    width = basewidth+10;
-    height = baseheight+20;
-
-    $(".mat").css("width", width+"px");
-    $(".mat").css("height", height+"px");
 
     width = basewidth;
-    height = baseheight;
+    height = width / perspective;
+    width = width.toFixed(0);
+    height = height.toFixed(0);
 
-    $("img").css("max-width",  width+"px");
-    $("img").css("max-height", height+"px");
+    $(".photo").height(height);
 }
 
 function enlargeImages() {
 
-    var pct = 1.25;
+    var pct = 1.5;
 
     basewidth *= pct;
-    baseheight *= pct;
 
     if (basewidth > 1000) {
         basewidth = 1000;
     }
-    if (baseheight > 1000) {
-        baseheight = 1000;
-    }
+
+    baseheight = basewidth / perspective;
     adjustCSS();
 }
 
 function reduceImages() {
 
-    var pct = .75;
+    var pct = .5;
 
     basewidth *= pct;
-    baseheight *= pct;
 
     if (basewidth < 50) {
         basewidth = 50;
     }
-    if (baseheight < 50) {
-        baseheight =  50;
-    }
+
+    baseheight = basewidth / perspective;
     adjustCSS();
 }

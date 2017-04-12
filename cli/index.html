@@ -4,87 +4,146 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <title>Bootstrap 3, from LayoutIt!</title>
 
         <meta name="description" content="Source code generated using layoutit.com">
         <meta name="author" content="LayoutIt!">
 
-        <link href="css/bootstrap.min.css" rel="stylesheet">
-        <link href="css/style.css" rel="stylesheet">
         <script src="js/config.js"></script>
 
         <title>Photoalbum</title>
     </head>
     <style>
-        .row {
-            align: center;
-            margin: 0 auto;
+        body {
+            background-color: #d0d0d0;
+            margin: 0px;
+            /*             font-size: 0; */
             text-align: center;
+        }
+
+        .photos {
+            text-align: center;
+            width: 90%;
+            display: inline-block;
+        }
+
+        button {
+        }
+
+
+        .matframe {
+            background-color: #e0e0e0;
+            border-color: #e0e0e0;
+            border-style: solid;
+            border-width: 10px;
+            box-sizing: border-box;
+            display: inline-block;
+/*             margin: 5px; */
+            margin: 20px;
+
+            width: auto;
+            height: auto;
+
+            /* vertical-align: crucial!!! otherwise the don't line up */
+            vertical-align: top;
+
+        }
+        .mat {
+            border-color: white;
+            border-style: solid;
+            border-width: 10px;
+            display: inline-block;
+            padding: 0px;
+
+            width: auto;
+            height: auto;
+        }
+        .matbutton {
+            cursor: pointer;
+        }
+        .caption {
+            background-color: #e0e0e0;
+            display: inline-block;
+            font-size: medium;
+            margin-top: 10px;
+            text-align: center;
+
+            height: auto;
             width: 100%;
 
         }
-        .frame {
-            background-color: #e0e0e0;
-            border-color: white;
-            border-style: solid;
-            border-width: 20px;
-            display: inline-block;        /* allows 'em to fill lines right */
-            margin: 0 auto;
-            padding: 15px;
+        .photo {
+            display: block;
+            height: 150px;
+            width: auto;
+        }
+        header {
+
+            width: 100%;
+            text-align: center;
+
+        }
+        .title {
+            display: block;
+            font-size: 2em;
+        }
+        .controls {
+            display: block;
+            text-align: left;
+        }
+        .thumbnail-controls {
+            display: inline-block;
+
+
+        }
+        .thumbnail-header {
+            display:block;
+        }
+        .thumbnail-sizers {
+            font-size: 1em;
+        }
+        .breadcrumbs {
+            display: inline-block;
+            font-size: x-large;
+            width: 70%;
             text-align: center;
         }
 
-        /* outter button */
-        .mat {
-            background-color: white;
-            border-color: #d0d0d0;
-            border-style: solid;
-            border-width: 1px;
-            height: 250px; */
-            padding: 10px;
-            margin: 0 auto;
-        }
-        .photo {
-            margin: 0 auto;
-        }
 
-        .heading {
-            align: center;
-        }
-/*      .block {
-           margin: auto;
-           max-height: 180px;
-           max-width: 250px;
-           padding: 0px;
-        }
-*/
 
     </style>
     <body>
-		<div class="container-fluid">
-			<div class="row">
 
-				<h2>
-                    <center>
-						<button onclick="photoalbum('');">Mike's Photoalbum</button>
-                    </center>
-                    <button onclick="enlargeImages();">Larger</button>
-                    <button onclick="reduceImages();">Smaller</button>
-				</h2>
-                <center>
-                    <div id="breadcrumbs" >bread / crumbs</div>
-                </center>
-			</div>
-		</div>
-        <div class="row">
-			<div id="photos">
-				<div class="block">one</div>
-				<div class="block">two</div>
-				<div class="block">three</div>
-			</div>
-		</div>
+        <header>
+
+            <div class="title">Mike's Photo Album</div>
+
+            <div class="controls">
+                <div class="thumbnail-controls">
+                    <div class="thumbnail-header">Thumbnail size:</div>
+                    <button class="thumbnail-sizers" onclick="enlargeImages();">Larger</button>
+                    <button class="thumbnail-sizers"  onclick="reduceImages();">Smaller</button>
+                </div>
+
+                <div id="breadcrumbs" class="breadcrumbs" >bread / crumbs</div>
+            </div>
+        </header>
+        <hr />
+
+		<div class="photos">
+            <div class="matframe">
+                <div class="buffer">
+                    <div class="mat matbutton">
+                        <img class="photo" />
+                    </div>
+                </div>
+                <div class="caption"></div>
+            </div>
+        </div>
+
         <script src="js/jquery.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <script src="js/paclient.js"></script>
