@@ -23,6 +23,17 @@ function createBreadcrumbs(arg) {
     return breadcrumbs;
 }
 
+function photoAlbumSort(type, a, b) {
+    if ("album" == type) {
+        return (a['dir'] <  b['dir']) ? 1 : -1;
+    } else if ("chapter" == type) {
+        var imga = a.replace(/.*\//, '');
+        var imgb = b.replace(/.*\//, '');
+        return (imga > imgb) ? 1 : -1;
+    }
+    return 0;
+}
+
 function photoalbum(dir) {
 
     $("#breadcrumbs").html(createBreadcrumbs(dir));
@@ -34,7 +45,9 @@ function photoalbum(dir) {
         var onclick="";
 
         var counter = 0;
-        result.results.forEach(function(img) {
+        result.results.sort(function(a,b) {
+            return photoAlbumSort(result.type,a,b);
+        }).forEach(function(img) {
             if (counter++ > 10) {
                 return;
             }
