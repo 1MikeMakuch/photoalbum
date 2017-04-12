@@ -33,7 +33,11 @@ function photoalbum(dir) {
         var photos="";
         var onclick="";
 
+        var counter = 0;
         result.results.forEach(function(img) {
+            if (counter++ > 10) {
+                return;
+            }
             var path = '';
             var matclass = '';
             var caption = '';
