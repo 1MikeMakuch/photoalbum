@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<!-- Take a look at: https://css-tricks.com/snippets/css/a-guide-to-flexbox/ -->
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>Bootstrap 3, from LayoutIt!</title>
+
+        <meta name="description" content="Source code generated using layoutit.com">
+        <meta name="author" content="LayoutIt!">
+
+        <script src="js/config.js"></script>
+
+        <title>Photoalbum</title>
+    </head>
+    <style>
+        body {
+/*             background-color: #d0d0d0; */
+            background-color: white;
+            margin: 0px;
+/*             font-size: 0; */
+            text-align: center;
+        }
+
+        .xphotos {
+            text-align: center;
+            width: 90%;
+            display: inline-block;
+        }
+
+        button {
+        }
+
+
+        .polaroid-matframe {
+            background-color: white;
+            border-color: white;
+            border-style: solid;
+            border-width: 2px;
+            box-sizing: border-box;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            display: inline-block;
+            /*             margin: 5px; */
+            margin: 20px;
+
+            width: auto;
+            height: auto;
+
+            /* vertical-align: crucial!!! otherwise the don't line up */
+            vertical-align: top;
+
+        }
+        /* background image **********************/
+        /* http://cdn.coolmompicks.com/wp-content/uploads/2014/05/Live-love-laugh-photo-album-on-Amazon.jpg */
+
+        .matframe {
+/*             background: url("/img/Album.png") no-repeat center ; */
+/*             background-size: contain; */
+
+            border: 50px solid transparent;
+            border-image: url("/img/Album.png") 12% round;
+
+/*             border-color: white; */
+/*             border-style: solid; */
+/*             border-width: 2px; */
+/*             box-sizing: border-box; */
+/*             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
+
+            display: inline-block;
+
+/*             margin: 5px; */
+/*             margin: 10px; */
+/*             width: 300px; */
+/*             min-height: 300px; */
+
+            /* vertical-align: crucial!!! otherwise the don't line up */
+            vertical-align: top;
+
+        }
+
+        .mat {
+            /*             border-color: white; */
+            /*             border-style: solid; */
+            /*             border-width: 10px; */
+            display: inline-block;
+            padding: 0px;
+
+            width: auto;
+            height: auto;
+        }
+        .matbutton {
+            cursor: pointer;
+        }
+        .caption {
+            background-color: white;
+            display: inline-block;
+            font-size: medium;
+            margin-top: 0px;
+            text-align: center;
+
+            height: auto;
+            width: 100%;
+
+        }
+        .photo {
+            display: block;
+            height: 150px;
+            width: auto;
+        }
+        header {
+
+            width: 100%;
+            text-align: center;
+
+        }
+        .title {
+            display: block;
+            font-size: 2em;
+        }
+        .controls {
+            display: block;
+            text-align: left;
+        }
+        .thumbnail-controls {
+            display: inline-block;
+
+
+        }
+        .thumbnail-header {
+            display:block;
+        }
+        .thumbnail-sizers {
+            font-size: 1em;
+        }
+        .breadcrumbs {
+            display: inline-block;
+            font-size: x-large;
+            width: 70%;
+            text-align: center;
+        }
+        .bg {
+            display: inline-block;
+            text-align: center;
+
+        }
+
+
+        .shadow {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
+        .background-image {
+            position: relative;
+            top: -10px;
+            left: -12px;
+        }
+        .shadowbg {
+            display:inline-block;
+            position:relative;
+            margin: 0;
+            width: 385px;
+            height: 356px;
+            box-shadow: 8px 8px 5px 0 rgba(0,0,0,0.2);
+            left:16px;
+            top:10px;
+        }
+        .image {
+            display: inline-block;
+            position: relative;
+            top: -330px;
+            left: -15px;
+
+            height: auto;
+        }
+        .image-frame {
+            border: 50px solid transparent;
+            border-image: url("/img/Album.png") 12% round;
+            display: inline-block;
+            font-size: 0;
+        }
+        .image2 {
+            display: inline-block;
+            position: relative;
+            border: 1px solid gray;
+/*             height: auto; */
+        }
+    </style>
+    <body>
+
+        <header>
+
+            <div class="title">Mike's Photo Album</div>
+
+            <div class="controls">
+                <div class="thumbnail-controls">
+                    <div class="thumbnail-header">Thumbnail size:</div>
+                    <button class="thumbnail-sizers" onclick="enlargeImages();">Larger</button>
+                    <button class="thumbnail-sizers"  onclick="reduceImages();">Smaller</button>
+                </div>
+
+                <div id="breadcrumbs" class="breadcrumbs" >bread / crumbs</div>
+            </div>
+        </header>
+        <hr />
+
+        <div class="image-frame"><img class="image2" src="/albums/2009/20091123-LaneKindergardenPortrait/raw/LaneKPortrait-600dpi-TouchedUp.jpg"  width="200px" /></div>
+
+        <div class="image-frame">
+            <img class="image2" src="/albums/2011/20110707-BowlingBalls/raw/IMG_4430.jpg" width="200px" />
+        </div>
+
+            <div class="image-frame">
+                <img class="image2" src="/albums/2011/20111022-ZZTOP/raw/IMG_4636.jpg" width="210px" />
+            </div>
+
+
+
+
+		<div class="bg">
+
+            <div class="shadowbg">
+                <img class="background-image" src="/img/Album.png" width="400px" />
+
+                <img class="image" src="/albums/2009/20090519-LaneRidleyPortraits/raw/scan0005.jpg" width="200px" />
+
+            </div>
+
+
+        </div>
+
+        <script src="js/jquery.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/paclient.js"></script>
+
+    </body>
+</html>
