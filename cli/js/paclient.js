@@ -54,26 +54,32 @@ function photoalbum(dir) {
             var path = '';
             var matclass = '';
             var caption = '';
+            var frameclass = '';
             if ("album" == result.type) {
                 path = (dir ? dir+'/' : '') + img['dir'];
                 caption = img['dir'];
                 onclick = ` onclick="photoalbum('` + path + `');" `;
                 img = img['image'];
                 matclass = 'mat matbutton';
-
+                frameclass = 'album-frame';
+                shadowclass = 'album-shadow';
             } else if ("chapter" == result.type) {
                 onclick = "";
                 matclass = 'mat';
+                frameclass = 'polaroid-frame'
                 caption = img.replace(/.*\//, '');
+                shadowclass = 'polaroid-shadow';
             }
             photos += `
-            <div class="matframe">
-                <div class="buffer">
-                    <div class="${matclass}">
-                        <img class="photo" ${onclick} src="${config.assetsUrl + img}" />
+            <div class="${frameclass}">
+                <div class="${shadowclass}" >
+                    <div class="buffer">
+                        <div class="${matclass}">
+                            <img class="photo" ${onclick} src="${config.assetsUrl + img}" />
+                        </div>
                     </div>
+                    <div class="caption">${caption}</div>
                 </div>
-                <div class="caption">${caption}</div>
             </div>`;
         });
 

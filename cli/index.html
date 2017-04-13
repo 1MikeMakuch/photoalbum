@@ -34,7 +34,7 @@
         }
 
 
-        .matframe {
+        .polaroid-frame {
             background-color: white;
             border-color: white;
             border-style: solid;
@@ -51,6 +51,26 @@
             /* vertical-align: crucial!!! otherwise the don't line up */
             vertical-align: top;
 
+        }
+        .polaroid-shadow {
+
+        }
+        .album-shadow {
+            box-shadow: 15px 15px 8px 20px rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            display: inline-block;
+
+        }
+        .album-frame {
+            border: 25px solid transparent;
+            border-image: url("/img/Album.png") 12% round;
+            display: inline-block;
+            font-size: 0;
+            margin: 40px;
+        }
+        .album-image {
+            display: inline-block;
+            position: relative;
+            border: 1px solid gray;
         }
         .mat {
             border-color: white;
