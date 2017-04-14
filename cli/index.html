@@ -112,7 +112,6 @@
 
          height: auto;
          width: 100%;
-
      }
      .photo {
          display: block;
@@ -136,6 +135,7 @@
      }
      .thumbnail-controls {
          display: inline-block;
+         width: 20%;
 
 
      }
@@ -145,11 +145,19 @@
      .thumbnail-sizers {
          font-size: 1em;
      }
-     .breadcrumbs {
+     #breadcrumbs {
          display: inline-block;
-         font-size: x-large;
-         width: 70%;
+         margin: auto;
          text-align: center;
+         width: 60%
+     }
+     .breadcrumbs a:link, .breadcrumbs a:visited, .breadcrumbs a:hover, .breadcrumbs a:active {
+         color: black;
+         display: inline-block;
+         font-size: large;
+
+         text-align: center;
+         text-decoration: none;
      }
 
     </style>
@@ -166,7 +174,8 @@
                     <button class="thumbnail-sizers"  onclick="reduceImages();">Smaller</button>
                 </div>
 
-                <div id="breadcrumbs" class="breadcrumbs" >bread / crumbs</div>
+                <div id="breadcrumbs" class="breadcrumbs" ></div>
+
             </div>
         </header>
         <hr />

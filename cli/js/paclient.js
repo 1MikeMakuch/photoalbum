@@ -9,7 +9,7 @@ $(document).ready(function(){
 function createBreadcrumbs(arg) {
     console.log('cB',arg);
     var dirs = arg.split('/');
-    var breadcrumbs = `<a href="#" onclick="photoalbum('');">HOME</a>`;
+    var breadcrumbs = `<a class="breadcrumbs" href="#" onclick="photoalbum('');">HOME</a>`;
     if (!arg) {
         return breadcrumbs;
     }
@@ -60,6 +60,7 @@ function photoalbum(dir) {
             if (counter++ > 10) {
                 return;
             }
+
             var path = '';
             var matclass = '';
             var captionText = '';
@@ -67,7 +68,6 @@ function photoalbum(dir) {
             var frameclass = '';
             if ("album" == result.type) {
                 path = (dir ? dir+'/' : '') + img['dir'];
-                //captionText = img['dir'];
                 captionText = captionAlbum(img['dir']);
                 onclick = ` onclick="photoalbum('` + path + `');" `;
                 img = img['image'];
