@@ -25,7 +25,7 @@ function createBreadcrumbs(arg) {
 
 function photoAlbumSort(type, a, b) {
     if ("album" == type) {
-        return (a['dir'] <  b['dir']) ? 1 : -1;
+        return (a['dir'] >  b['dir']) ? 1 : -1;
     } else if ("chapter" == type) {
         var imga = a.replace(/.*\//, '');
         var imgb = b.replace(/.*\//, '');
