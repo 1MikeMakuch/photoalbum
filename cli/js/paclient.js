@@ -25,7 +25,7 @@ function createBreadcrumbs(arg) {
 
 function photoAlbumSort(type, a, b) {
     if ("album" == type) {
-        return (a['dir'] >  b['dir']) ? 1 : -1;
+        return (a['dir'] <  b['dir']) ? 1 : -1;
     } else if ("chapter" == type) {
         var imga = a.replace(/.*\//, '');
         var imgb = b.replace(/.*\//, '');
@@ -34,6 +34,15 @@ function photoAlbumSort(type, a, b) {
     return 0;
 }
 
+function captionAlbum(img){
+    var desc = img;
+    if (img.match(/[0-9]{8}-.*/)) {
+        desc = img.substring(0,4) + '/' + img.substring(4,6) + '/' + img.substring(6,8);
+        desc += ' ' + img.substring(9);
+    }
+    return desc;
+
+}
 function photoalbum(dir) {
 
     $("#breadcrumbs").html(createBreadcrumbs(dir));
@@ -58,7 +67,8 @@ function photoalbum(dir) {
             var frameclass = '';
             if ("album" == result.type) {
                 path = (dir ? dir+'/' : '') + img['dir'];
-                captionText = img['dir'];
+                //captionText = img['dir'];
+                captionText = captionAlbum(img['dir']);
                 onclick = ` onclick="photoalbum('` + path + `');" `;
                 img = img['image'];
                 matclass = 'mat matbutton';
@@ -71,6 +81,7 @@ function photoalbum(dir) {
                 matclass = 'mat';
                 frameclass = 'polaroid-frame'
                 captionText = img.replace(/.*\//, '');
+                //captionText = captionImage(img);
                 shadowclass = 'polaroid-shadow';
                 captionClass = 'polaroid-caption';
             } else {
