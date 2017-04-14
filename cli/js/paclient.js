@@ -53,24 +53,31 @@ function photoalbum(dir) {
             }
             var path = '';
             var matclass = '';
-            var caption = '';
+            var captionText = '';
+            var captionClass = '';
             var frameclass = '';
             if ("album" == result.type) {
                 path = (dir ? dir+'/' : '') + img['dir'];
-                caption = img['dir'];
+                captionText = img['dir'];
                 onclick = ` onclick="photoalbum('` + path + `');" `;
                 img = img['image'];
                 matclass = 'mat matbutton';
                 frameclass = 'album-frame';
                 shadowclass = 'album-shadow';
+                captionClass = 'album-caption';
+
             } else if ("chapter" == result.type) {
                 onclick = "";
                 matclass = 'mat';
                 frameclass = 'polaroid-frame'
-                caption = img.replace(/.*\//, '');
+                captionText = img.replace(/.*\//, '');
                 shadowclass = 'polaroid-shadow';
+                captionClass = 'polaroid-caption';
+            } else {
+                console.log('epic fail');
+                alert('epic fail');
             }
-            photos += `
+            var one = `
             <div class="${frameclass}">
                 <div class="${shadowclass}" >
                     <div class="buffer">
@@ -78,9 +85,11 @@ function photoalbum(dir) {
                             <img class="photo" ${onclick} src="${config.assetsUrl + img}" />
                         </div>
                     </div>
-                    <div class="caption">${caption}</div>
+                    <div class="${captionClass}">${captionText}</div>
                 </div>
             </div>`;
+            photos += one;
+            console.log(one);
         });
 
         $(".photos").html(photos);

@@ -18,123 +18,139 @@
         <title>Photoalbum</title>
     </head>
     <style>
-        body {
-            background-color: #d0d0d0;
-            margin: 0px;
-            /*             font-size: 0; */
-            text-align: center;
-        }
+     body {
+         background-color: #d0d0d0;
+         margin: 0px;
+         /*             font-size: 0; */
+         text-align: center;
+     }
 
-        .photos {
-            text-align: center;
-            width: 90%;
-            display: inline-block;
-        }
+     .photos {
+         text-align: center;
+         width: 90%;
+         display: inline-block;
+     }
 
-        button {
-        }
-
-
-        .polaroid-frame {
-            background-color: white;
-            border-color: white;
-            border-style: solid;
-            border-width: 2px;
-            box-sizing: border-box;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-            display: inline-block;
-/*             margin: 5px; */
-            margin: 20px;
-
-            width: auto;
-            height: auto;
-
-            /* vertical-align: crucial!!! otherwise they don't line up */
-            vertical-align: top;
-
-        }
-        .polaroid-shadow {
-
-        }
-        .album-shadow {
-            box-shadow: 15px 15px 8px 20px rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-            display: inline-block;
-
-        }
-        .album-frame {
-            border: 25px solid transparent;
-            border-image: url("img/Album.png") 12% round;
-            -webkit-border-image: url("img/Album.png") 12% round;
-            -o-border-image: url("img/Album.png") 12% round;
-            display: inline-block;
-            font-size: 0;
-            margin: 40px;
-        }
-        .album-image {
-            display: inline-block;
-            position: relative;
-            border: 1px solid gray;
-        }
-        .mat {
-            border-color: white;
-            border-style: solid;
-            border-width: 10px;
-            display: inline-block;
-            padding: 0px;
-
-            width: auto;
-            height: auto;
-        }
-        .matbutton {
-            cursor: pointer;
-        }
-        .caption {
-            background-color: white;
-            display: inline-block;
-            font-size: medium;
-            margin-top: 0px;
-            text-align: center;
-
-            height: auto;
-            width: 100%;
-
-        }
-        .photo {
-            display: block;
-            height: 150px;
-            width: auto;
-        }
-        header {
-
-            width: 100%;
-            text-align: center;
-
-        }
-        .title {
-            display: block;
-            font-size: 2em;
-        }
-        .controls {
-            display: block;
-            text-align: left;
-        }
-        .thumbnail-controls {
-            display: inline-block;
+     button {
+     }
 
 
-        }
-        .thumbnail-header {
-            display:block;
-        }
-        .thumbnail-sizers {
-            font-size: 1em;
-        }
-        .breadcrumbs {
-            display: inline-block;
-            font-size: x-large;
-            width: 70%;
-            text-align: center;
-        }
+     .polaroid-frame {
+         background-color: white;
+         border-color: white;
+         border-style: solid;
+         border-width: 2px;
+         box-sizing: border-box;
+         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+         display: inline-block;
+         /*             margin: 5px; */
+         margin: 20px;
+
+         width: auto;
+         height: auto;
+
+         /* vertical-align: crucial!!! otherwise they don't line up */
+         vertical-align: top;
+
+     }
+     .polaroid-shadow {
+
+     }
+     .album-shadow {
+         box-shadow: 15px 15px 8px 20px rgba(0, 0, 0, 0.2);
+         display: inline-block;
+
+
+     }
+     .album-frame {
+         border: 25px solid transparent;
+         border-image: url("img/Album.png") 12% round;
+         -webkit-border-image: url("img/Album.png") 12% round;
+         -o-border-image: url("img/Album.png") 12% round;
+         display: inline-block;
+         font-size: 0;
+         margin: 40px;
+     }
+     .album-image {
+         display: inline-block;
+         position: relative;
+         border: 1px solid gray;
+     }
+     .mat {
+         border-color: white;
+         border-style: solid;
+         border-width: 10px;
+         display: inline-block;
+         padding: 0px;
+
+         width: auto;
+         height: auto;
+     }
+     .matbutton {
+         cursor: pointer;
+     }
+     .album-caption {
+         background-color: transparent;
+         color: white;
+         display: block;
+         font-size: large;
+         margin-top: 5px;
+         text-align: center;
+
+         height: auto;
+         width: auto;
+/*          width: 100%; */
+     }
+
+     .polaroid-caption {
+         background-color: white;
+         color: black;
+         display: inline-block;
+         font-size: medium;
+         margin-top: 0px;
+         text-align: center;
+
+         height: auto;
+         width: 100%;
+
+     }
+     .photo {
+         display: block;
+         height: 150px;
+         width: auto;
+     }
+
+     header {
+
+         width: 100%;
+         text-align: center;
+
+     }
+     .title {
+         display: block;
+         font-size: 2em;
+     }
+     .controls {
+         display: block;
+         text-align: left;
+     }
+     .thumbnail-controls {
+         display: inline-block;
+
+
+     }
+     .thumbnail-header {
+         display:block;
+     }
+     .thumbnail-sizers {
+         font-size: 1em;
+     }
+     .breadcrumbs {
+         display: inline-block;
+         font-size: x-large;
+         width: 70%;
+         text-align: center;
+     }
 
     </style>
     <body>
@@ -145,7 +161,7 @@
 
             <div class="controls">
                 <div class="thumbnail-controls">
-                    <div class="thumbnail-header">Thumbnail size:</div>
+                    <div class="thumbnail-header">Image size:</div>
                     <button class="thumbnail-sizers" onclick="enlargeImages();">Larger</button>
                     <button class="thumbnail-sizers"  onclick="reduceImages();">Smaller</button>
                 </div>
