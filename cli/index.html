@@ -26,7 +26,7 @@
         }
 
         .album-caption {
-            background-color:transparent;
+            background-color:black;
             color:white;
             display:block;
             font-size:large;
@@ -37,10 +37,12 @@
         }
 
         .album-frame {
+            /* order of these border props matters! border needs to be first */
             border:25px solid transparent;
             border-image:url(img/Album.png) 12% round;
             -o-border-image:url(img/Album.png) 12% round;
             -webkit-border-image:url(img/Album.png) 12% round;
+
             display:inline-block;
             font-size:0;
             margin:40px;
