@@ -1,23 +1,21 @@
-
-$(document).ready(function(){
-    var dir='2009';
-    dir='';
+$(document).ready(function() {
+    var dir = "2009";
+    dir = "";
     photoalbum(dir);
-
 });
 
 function createBreadcrumbs(arg) {
-    console.log('cB',arg);
-    var dirs = arg.split('/');
+    var dirs = arg.split("/");
     var breadcrumbs = `<a class="breadcrumbs" href="#" onclick="photoalbum('');">HOME</a>`;
     if (!arg) {
         return breadcrumbs;
     }
-    var link = '';
+    var link = "";
     dirs.forEach(function(dir) {
-        console.log('dir',dir);
-        link += (link ? '/' : '') + dir;
-        breadcrumbs += (breadcrumbs ? ' / ' : '') + `<a href="#" onclick="photoalbum('` + link + `');">` + dir + `</a>`;
+        link += (link ? "/" : "") + dir;
+        breadcrumbs +=
+            (breadcrumbs ? " / " : "") +
+            `<a href="#" onclick="photoalbum('${link}');">${dir}</a>`;
     });
 
     return breadcrumbs;
@@ -25,70 +23,75 @@ function createBreadcrumbs(arg) {
 
 function photoAlbumSort(type, a, b) {
     if ("album" == type) {
-        return (a['dir'] >  b['dir']) ? 1 : -1;
+        return a["dir"] > b["dir"] ? 1 : -1;
     } else if ("chapter" == type) {
-        var imga = a.replace(/.*\//, '');
-        var imgb = b.replace(/.*\//, '');
-        return (imga > imgb) ? 1 : -1;
+        var imga = a.replace(/.*\//, "");
+        var imgb = b.replace(/.*\//, "");
+        return imga > imgb ? 1 : -1;
     }
     return 0;
 }
 
-function captionAlbum(img){
+function captionAlbum(img) {
     var desc = img;
     if (img.match(/[0-9]{8}-.*/)) {
-        desc = img.substring(0,4) + '/' + img.substring(4,6) + '/' + img.substring(6,8);
-        desc += ' ' + img.substring(9);
+        desc =
+            img.substring(0, 4) +
+            "/" +
+            img.substring(4, 6) +
+            "/" +
+            img.substring(6, 8);
+        desc += " " + img.substring(9);
     }
     return desc;
-
 }
 function photoalbum(dir) {
-
     $("#breadcrumbs").html(createBreadcrumbs(dir));
 
-    var query = config.apiServer + '/query/' + dir;
+    var query = config.apiServer + "/query/" + dir;
 
-    $.ajax({url: query, success: function(result) {
-        var photos="";
-        var onclick="";
+    $.ajax({
+        url: query,
+        success: function(result) {
+            var photos = "";
+            var onclick = "";
 
-        var counter = 0;
-        result.results.sort(function(a,b) {
-            return photoAlbumSort(result.type,a,b);
-        }).forEach(function(img) {
-            if (counter++ > 10) {
-                return;
-            }
+            var counter = 0;
+            result.results
+                .sort(function(a, b) {
+                    return photoAlbumSort(result.type, a, b);
+                })
+                .forEach(function(img) {
+                    if (counter++ > 10) {
+                        return;
+                    }
 
-            var path = '';
-            var matclass = '';
-            var captionText = '';
-            var captionClass = '';
-            var frameclass = '';
-            if ("album" == result.type) {
-                path = (dir ? dir+'/' : '') + img['dir'];
-                captionText = captionAlbum(img['dir']);
-                onclick = ` onclick="photoalbum('` + path + `');" `;
-                img = img['image'];
-                matclass = 'mat matbutton';
-                frameclass = 'album-frame';
-                shadowclass = 'album-shadow';
-                captionClass = 'album-caption';
-
-            } else if ("chapter" == result.type) {
-                onclick = "";
-                matclass = 'mat';
-                frameclass = 'polaroid-frame'
-                captionText = img.replace(/.*\//, '');
-                //captionText = captionImage(img);
-                shadowclass = 'polaroid-shadow';
-                captionClass = 'polaroid-caption';
-            } else {
-                console.log('epic fail');
-                alert('epic fail');
-            }
-            var one = `
+                    var path = "";
+                    var matclass = "";
+                    var captionText = "";
+                    var captionClass = "";
+                    var frameclass = "";
+                    if ("album" == result.type) {
+                        path = (dir ? dir + "/" : "") + img["dir"];
+                        captionText = captionAlbum(img["dir"]);
+                        onclick = ` onclick="photoalbum('` + path + `');" `;
+                        img = img["image"];
+                        matclass = "mat matbutton";
+                        frameclass = "album-frame";
+                        shadowclass = "album-shadow";
+                        captionClass = "album-caption";
+                    } else if ("chapter" == result.type) {
+                        onclick = "";
+                        matclass = "mat";
+                        frameclass = "polaroid-frame";
+                        captionText = img.replace(/.*\//, "");
+                        shadowclass = "polaroid-shadow";
+                        captionClass = "polaroid-caption";
+                    } else {
+                        console.log("epic fail");
+                        alert("epic fail");
+                    }
+                    var one = `
             <div class="${frameclass}">
                 <div class="${shadowclass}" >
                     <div class="buffer">
@@ -99,23 +102,20 @@ function photoalbum(dir) {
                     <div class="${captionClass}">${captionText}</div>
                 </div>
             </div>`;
-            photos += one;
-            console.log(one);
-        });
+                    photos += one;
+                });
 
-        $(".photos").html(photos);
-        adjustCSS();
+            $(".photos").html(photos);
+            adjustCSS();
+        },
+    });
+}
 
-    }});
-};
-
-var basewidth=150;
-var baseheight=150;
+var basewidth = 150;
+var baseheight = 150;
 var perspective = basewidth / baseheight;
 
 function adjustCSS() {
-
-
     width = basewidth;
     height = width / perspective;
     width = width.toFixed(0);
@@ -125,7 +125,6 @@ function adjustCSS() {
 }
 
 function enlargeImages() {
-
     var pct = 1.5;
 
     basewidth *= pct;
@@ -139,8 +138,7 @@ function enlargeImages() {
 }
 
 function reduceImages() {
-
-    var pct = .5;
+    var pct = 0.5;
 
     basewidth *= pct;
 
