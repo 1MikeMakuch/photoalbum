@@ -1,6 +1,8 @@
 
 /* pa.css */
 
+/* :root {} */
+
 #breadcrumbs {
     display:inline-block;
     margin:auto;
@@ -83,7 +85,7 @@
 
 .polaroid-caption {
     background-color:white;
-    color:#d0d0d0;
+    color: #d0d0d0;
     display:inline-block;
     font-size:small;
     height:auto;
@@ -125,7 +127,7 @@
 }
 
 body {
-    background-color:#d0d0d0;
+    background-color: #d0d0d0;
     margin:0;
     text-align:center;
 }

@@ -1,6 +1,7 @@
 var express = require("express");
 var app = express();
 var cors = require("cors");
+var sleep = require('sleep');
 
 var config = require("../config");
 
@@ -38,6 +39,7 @@ app.get(/^\/query\/((?:[^\/]+\/?)+)\/*/, function(req, res) {
     verifyDir(dir).then(function(vres) {
         return photoAlbum(dir).then(function(dirs) {
             console.log(dirs);
+//            sleep.sleep(2);
             res.send(dirs);
         });
         return;
