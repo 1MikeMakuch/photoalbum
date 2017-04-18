@@ -46,7 +46,9 @@ function busy() {
 }
 function unbusy() {
     setTimeout(function() {
-        spinner.stop();
+        if (spinner) {
+            spinner.stop();
+        }
         console.log("unbusy");
     }, 500);
 }
@@ -197,14 +199,13 @@ function adjustCSS() {
     height = height.toFixed(0);
 
     //    $(".photo").height(height);
-    /*
+
     var dfd = $.Deferred();
     dfd.done(adjustHeight(height));
     dfd.done(function() {
         unbusy();
     });
     dfd.resolve();
-    */
 }
 
 function enlargeImages() {
