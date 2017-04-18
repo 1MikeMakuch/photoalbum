@@ -1,7 +1,8 @@
 var express = require("express");
 var app = express();
 var cors = require("cors");
-var sleep = require('sleep');
+var sleep = require("sleep");
+var querystring = require("querystring");
 
 var config = require("../config");
 
@@ -16,6 +17,8 @@ var fs = promisify("fs");
 
 process.chdir(config.apiDocroot);
 
+app.set("query parser", true);
+
 app.get("/", function(req, res) {
     res.send("Hello, world!\n");
 });
@@ -23,11 +26,16 @@ app.get("/", function(req, res) {
 // Handle just /query/
 app.get("/query/", function(req, res) {
     console.log(req.url);
-    return photoAlbum(".").then(function(dirs) {
-        console.log(dirs);
-        res.send(dirs);
-        return;
-    });
+    console.log("query", req.query);
+
+    return verifyDir(".", req.query)
+        .then(function(vres) {
+            return photoAlbum(".", req.query["page"]);
+        })
+        .then(function(dirs) {
+            console.log(dirs);
+            res.send(dirs);
+        });
 });
 
 // Handle arbitrary paths following /query/
@@ -35,26 +43,31 @@ app.get(/^\/query\/((?:[^\/]+\/?)+)\/*/, function(req, res) {
     console.log(req.url);
     var dir = req.params[0].split("/");
     dir = dir.join("/");
+    console.log("query", req.query);
 
-    verifyDir(dir).then(function(vres) {
-        return photoAlbum(dir).then(function(dirs) {
+    return verifyDir(dir, req.query)
+        .then(function(vres) {
+            return photoAlbum(dir, req.query["page"]);
+        })
+        .then(function(dirs) {
             console.log(dirs);
-//            sleep.sleep(2);
             res.send(dirs);
+        })
+        .catch(function(e) {
+            console.log("caught", e);
+            res.status(404).send("not found");
         });
-        return;
-    });
 });
 
 app.use(express.static("./"));
 
 // error handler to emit errors as a json string
 app.use(function(err, req, res, next) {
-    console.log("error!");
+    console.log("error!", err);
     if (typeof err !== "object") {
         // If the object is not an Error, create a representation that appears to be
         err = {
-            message: String(err), // Coerce to string
+            message: String(err) // Coerce to string
         };
     } else {
         // Ensure that err.message is enumerable (It is not by default)
@@ -118,13 +131,22 @@ function isDirectory(path) {
         });
 }
 
-function verifyDir(dir) {
+function isNumeric(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+function verifyDir(dir, queryString) {
     var path = /*docRoot + '/' + */ dir;
 
-    //console.log('verifyDirP ' + path);
-
     if (path.includes("..")) {
-        return Promise(false);
+        return Promise.reject(new Error("bad path"));
+    }
+    console.log("verifyDir", queryString);
+    if (
+        !queryString ||
+        ("page" in queryString && !isNumeric(queryString["page"]))
+    ) {
+        return Promise.reject(new Error("bad query string"));
     }
 
     return pathExists(path)
@@ -184,17 +206,25 @@ function getThumb(dir) {
         })();
     });
 }
-function getPics(dir) {
+function getPics(dir, page) {
     dir += "/raw";
-    return readDir(dir).then(function(pics) {
-        paths = [];
-        pics.forEach(function(file) {
-            if (file.match(/jpg$/i)) {
-                paths.push(dir + "/" + file);
-            }
+    return readDir(dir)
+        .then(function(pics) {
+            console.log("getPics", pics);
+            return pics.sort(imgSort);
+        })
+        .then(function(pics) {
+            paths = [];
+            pics.forEach(function(file) {
+                if (file.match(/jpg$/i)) {
+                    paths.push(dir + "/" + file);
+                }
+            });
+            return paths;
+        })
+        .then(function(pics) {
+            return pageSelector(pics, page);
         });
-        return paths;
-    });
 }
 
 function getDirs(dir) {
@@ -243,31 +273,52 @@ function getDirs(dir) {
             });
     });
 }
-
-function getDirsAndThumbs(dir) {
-    console.log("getDirsAndThumbs", dir);
-    return getDirs(dir).then(function(dirs) {
-        var promises = [];
-        dirs.forEach(function(subdir) {
-            if (dir && "." != dir) {
-                promises.push(getThumb(dir + "/" + subdir));
-            } else {
-                promises.push(getThumb(subdir));
-            }
-        });
-
-        return Promise.all(promises).then(function(thumbs) {
-            //console.log('Promise.all.then',thumbs);
-            var results = [];
-            for (var i = 0; i < dirs.length; i++) {
-                results.push({ dir: dirs[i], image: thumbs[i] });
-            }
-            return results;
-        });
-    });
+function dirSort(a, b) {
+    var r = a < b ? 1 : -1;
+    return r;
+}
+function imgSort(a, b) {
+    var r = a > b ? 1 : -1;
+    return r;
+}
+function pageSelector(list, page) {
+    if (!isNumeric(page)) {
+        return list;
+    }
+    return list.splice(page * config.pageSize, config.pageSize);
 }
 
-function photoAlbum(dir) {
+function getDirsAndThumbs(dir, page) {
+    console.log("getDirsAndThumbs", dir);
+    return getDirs(dir)
+        .then(function(dirs) {
+            return dirs.sort(dirSort);
+        })
+        .then(function(dirs) {
+            return pageSelector(dirs, page);
+        })
+        .then(function(dirs) {
+            var promises = [];
+            dirs.forEach(function(subdir) {
+                if (dir && "." != dir) {
+                    promises.push(getThumb(dir + "/" + subdir));
+                } else {
+                    promises.push(getThumb(subdir));
+                }
+            });
+
+            return Promise.all(promises).then(function(thumbs) {
+                //console.log('Promise.all.then',thumbs);
+                var results = [];
+                for (var i = 0; i < dirs.length; i++) {
+                    results.push({ dir: dirs[i], image: thumbs[i] });
+                }
+                return results;
+            });
+        });
+}
+
+function photoAlbum(dir, page) {
     console.log("dirList", dir);
     console.log("cwd", process.cwd());
 
@@ -287,12 +338,12 @@ function photoAlbum(dir) {
         console.log("semaphores", results);
 
         if (isAlbum) {
-            return getDirsAndThumbs(dir).then(function(results) {
+            return getDirsAndThumbs(dir, page).then(function(results) {
                 //console.log('getDirs.then',results);
                 return { type: "album", results: results };
             });
         } else if (isChapter) {
-            return getPics(dir).then(function(pics) {
+            return getPics(dir, page).then(function(pics) {
                 return { type: "chapter", results: pics };
             });
         } else {

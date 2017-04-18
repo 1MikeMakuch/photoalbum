@@ -1,8 +1,38 @@
+var PAGE = 0;
+var DIR = "";
+
 $(document).ready(function() {
-    var dir = "2009";
-    dir = "";
-    photoalbum(dir);
+    //    DIR = "2009";
+    DIR = "";
+    photoalbum(DIR, PAGE);
 });
+
+function unbindScroll() {
+    console.log("scroll unbind");
+    $(window).unbind("scroll");
+}
+
+function bindScroll() {
+    unbindScroll();
+    var win = $(window);
+    console.log("scroll bind");
+    $("#loading").hide();
+
+    // Each time the user scrolls
+    win.scroll(function() {
+        // End of the document reached?
+
+        if ($(document).height() - win.height() == win.scrollTop()) {
+            PAGE++;
+            console.log("loading...", DIR, PAGE);
+            unbindScroll();
+
+            $("#loading").show();
+            photoalbum(DIR, PAGE);
+            $("#loading").hide();
+        }
+    });
+}
 
 var opts = { radius: 100, length: 50 };
 var spinner;
@@ -23,7 +53,7 @@ function unbusy() {
 
 function createBreadcrumbs(arg) {
     var dirs = arg.split("/");
-    var breadcrumbs = `<a class="breadcrumbs" href="#" onclick="photoalbum('');">HOME</a>`;
+    var breadcrumbs = `<a class="breadcrumbs" href="#" onclick="photoalbum('',0);">HOME</a>`;
     if (!arg) {
         return breadcrumbs;
     }
@@ -32,7 +62,7 @@ function createBreadcrumbs(arg) {
         link += (link ? "/" : "") + dir;
         breadcrumbs +=
             (breadcrumbs ? " / " : "") +
-            `<a href="#" onclick="photoalbum('${link}');">${dir}</a>`;
+            `<a href="#" onclick="photoalbum('${link}',0);">${dir}</a>`;
     });
 
     return breadcrumbs;
@@ -40,7 +70,7 @@ function createBreadcrumbs(arg) {
 
 function photoAlbumSort(type, a, b) {
     if ("album" == type) {
-        return a["dir"] > b["dir"] ? 1 : -1;
+        return a["dir"] < b["dir"] ? 1 : -1;
     } else if ("chapter" == type) {
         var imga = a.replace(/.*\//, "");
         var imgb = b.replace(/.*\//, "");
@@ -62,56 +92,35 @@ function captionAlbum(img) {
     }
     return desc;
 }
+function emitPhoto(dir, type, img) {
+    var path = "";
+    var matclass = "";
+    var captionText = "";
+    var captionClass = "";
+    var frameclass = "";
+    var onclick = "";
 
-function photoalbum(dir) {
-    $("#breadcrumbs").html(createBreadcrumbs(dir));
-
-    var query = config.apiServer + "/query/" + dir;
-
-    busy();
-
-    $.ajax({
-        url: query,
-        success: function(result) {
-            var photos = "";
-            var onclick = "";
-
-            var counter = 0;
-            result.results
-                .sort(function(a, b) {
-                    return photoAlbumSort(result.type, a, b);
-                })
-                .forEach(function(img) {
-                    if (counter++ > 10) {
-                        return;
-                    }
-
-                    var path = "";
-                    var matclass = "";
-                    var captionText = "";
-                    var captionClass = "";
-                    var frameclass = "";
-                    if ("album" == result.type) {
-                        path = (dir ? dir + "/" : "") + img["dir"];
-                        captionText = captionAlbum(img["dir"]);
-                        onclick = ` onclick="photoalbum('` + path + `');" `;
-                        img = img["image"];
-                        matclass = "mat matbutton";
-                        frameclass = "album-frame";
-                        shadowclass = "album-shadow";
-                        captionClass = "album-caption";
-                    } else if ("chapter" == result.type) {
-                        onclick = "";
-                        matclass = "mat";
-                        frameclass = "polaroid-frame";
-                        captionText = img.replace(/.*\//, "");
-                        shadowclass = "polaroid-shadow";
-                        captionClass = "polaroid-caption";
-                    } else {
-                        console.log("epic fail");
-                        alert("epic fail");
-                    }
-                    var one = `
+    if ("album" == type) {
+        path = (dir ? dir + "/" : "") + img["dir"];
+        captionText = captionAlbum(img["dir"]);
+        onclick = ` onclick="photoalbum('` + path + `',0);" `;
+        img = img["image"];
+        matclass = "mat matbutton";
+        frameclass = "album-frame";
+        shadowclass = "album-shadow";
+        captionClass = "album-caption";
+    } else if ("chapter" == type) {
+        onclick = "";
+        matclass = "mat";
+        frameclass = "polaroid-frame";
+        captionText = img.replace(/.*\//, "");
+        shadowclass = "polaroid-shadow";
+        captionClass = "polaroid-caption";
+    } else {
+        console.log("epic fail");
+        alert("epic fail");
+    }
+    var photo = `
             <div class="${frameclass}">
                 <div class="${shadowclass}" >
                     <div class="buffer">
@@ -122,11 +131,50 @@ function photoalbum(dir) {
                     <div class="${captionClass}">${captionText}</div>
                 </div>
             </div>`;
-                    photos += one;
-                });
+    return photo;
+}
 
-            $(".photos").html(photos);
+function photoalbum(dir, page) {
+    DIR = dir;
+    $("#breadcrumbs").html(createBreadcrumbs(dir));
+    if (!page) {
+        page = 0;
+    }
+    if (!page) {
+        bindScroll();
+    }
+    PAGE = page;
+
+    var query = config.apiServer + "/query/" + dir + `?page=${page}`;
+
+    //    busy();
+
+    $.ajax({
+        url: query,
+        success: function(result) {
+            if (!result.results.length) {
+                $("#loading").hide();
+                unbindScroll();
+            }
+
+            var photos = "";
+
+            result.results
+                .sort(function(a, b) {
+                    return photoAlbumSort(result.type, a, b);
+                })
+                .forEach(function(img) {
+                    photos += emitPhoto(dir, result.type, img);
+                });
+            if (page) {
+                $(".photos").append(photos);
+            } else {
+                $(".photos").html(photos);
+            }
             adjustCSS();
+            if (result.results.length) {
+                bindScroll();
+            }
         }
     });
 }
@@ -141,7 +189,7 @@ function adjustHeight(height) {
 }
 
 function adjustCSS() {
-    busy();
+    //    busy();
 
     width = basewidth;
     height = width / perspective;
@@ -149,13 +197,14 @@ function adjustCSS() {
     height = height.toFixed(0);
 
     //    $(".photo").height(height);
-
+    /*
     var dfd = $.Deferred();
     dfd.done(adjustHeight(height));
     dfd.done(function() {
         unbusy();
     });
     dfd.resolve();
+    */
 }
 
 function enlargeImages() {

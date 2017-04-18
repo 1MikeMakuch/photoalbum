@@ -14,6 +14,7 @@
     "express": "^4.13.3",
     "lodash": "^4.17.4",
     "promisify-node": "^0.4.0",
+    "querystring": "^0.2.0",
     "sleep": "^5.1.1"
   }
 }
