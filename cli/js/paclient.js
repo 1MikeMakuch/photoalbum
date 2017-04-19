@@ -41,6 +41,7 @@ function busy() {
     if (spinner) spinner.stop();
     spinner = new Spinner(opts).spin();
     $("body").append(spinner.el);
+    $(".spinner").css({ position: "fixed" });
 
     console.log("busy");
 }
@@ -149,7 +150,7 @@ function photoalbum(dir, page) {
 
     var query = config.apiServer + "/query/" + dir + `?page=${page}`;
 
-    //    busy();
+    busy();
 
     $.ajax({
         url: query,
