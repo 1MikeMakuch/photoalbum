@@ -70,14 +70,33 @@ function createBreadcrumbs(arg) {
 
     return breadcrumbs;
 }
-
-function photoAlbumSort(type, a, b) {
+function isNumeric(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+}
+function photoAlbumSort(type, namea, nameb) {
+    var a = namea["dir"];
+    var b = nameb["dir"];
+    console.log("paSort", a, b);
     if ("album" == type) {
-        return a["dir"] < b["dir"] ? 1 : -1;
+        var r;
+        if (isNumeric(a.substring(0, 1)) && isNumeric(b.substring(0, 1))) {
+            r = a < b ? 1 : -1;
+        } else if (
+            isNumeric(a.substring(0, 1)) && !isNumeric(b.substring(0, 1))
+        ) {
+            r = -1;
+        } else if (
+            !isNumeric(a.substring(0, 1)) && isNumeric(b.substring(0, 1))
+        ) {
+            r = 1;
+        } else {
+            r = a.toLowerCase() > b.toLowerCase() ? 1 : -1;
+        }
+        return r;
     } else if ("chapter" == type) {
-        var imga = a.replace(/.*\//, "");
-        var imgb = b.replace(/.*\//, "");
-        return imga > imgb ? 1 : -1;
+        var imga = namea.replace(/.*\//, "");
+        var imgb = nameb.replace(/.*\//, "");
+        return imga.toLowerCase() > imgb.toLowerCase() ? 1 : -1;
     }
     return 0;
 }

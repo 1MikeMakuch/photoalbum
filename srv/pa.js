@@ -274,11 +274,20 @@ function getDirs(dir) {
     });
 }
 function dirSort(a, b) {
-    var r = a < b ? 1 : -1;
+    var r;
+    if (isNumeric(a.substring(0, 1)) && isNumeric(b.substring(0, 1))) {
+        r = a < b ? 1 : -1;
+    } else if (isNumeric(a.substring(0, 1)) && !isNumeric(b.substring(0, 1))) {
+        r = -1;
+    } else if (!isNumeric(a.substring(0, 1)) && isNumeric(b.substring(0, 1))) {
+        r = 1;
+    } else {
+        r = a.toLowerCase() > b.toLowerCase() ? 1 : -1;
+    }
     return r;
 }
 function imgSort(a, b) {
-    var r = a > b ? 1 : -1;
+    var r = a.toLowerCase() > b.toLowerCase() ? 1 : -1;
     return r;
 }
 function pageSelector(list, page) {
