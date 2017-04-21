@@ -1,21 +1,74 @@
+// TODO get rid of these globals
+
 var PAGE = 0;
 var DIR = "";
 
 $(document).ready(function() {
-    //    DIR = "2009";
-    DIR = "";
     photoalbum(DIR, PAGE);
 });
 
+// main entry point, render markup for all photos in page N of dir
+function photoalbum(dir, page) {
+    function handleApiResponse(result) {
+        if (!result.results.length) {
+            $("#loading").hide();
+            unbindScroll();
+        }
+
+        var photos = "";
+
+        result.results
+            .sort(function(a, b) {
+                return photoAlbumSort(result.type, a, b);
+            })
+            .forEach(function(img) {
+                photos += emitPhoto(dir, result.type, img);
+            });
+        if (page) {
+            $(".photos").append(photos);
+        } else {
+            $(".photos").html(photos);
+        }
+        resize.apply();
+        if (result.results.length) {
+            bindScroll();
+        }
+    }
+
+    DIR = dir;
+    $("#breadcrumbs").html(createBreadcrumbs(dir));
+    if (!page) {
+        page = 0;
+    }
+    if (!page) {
+        bindScroll();
+    }
+    PAGE = page;
+
+    var query = config.apiServer + "/query/" + dir + `?page=${page}`;
+
+    //    busy();
+    spinner("busy");
+
+    $.ajax({
+        url: query,
+        success: handleApiResponse
+    });
+}
+
+////////////////////////////////////////////
+// Infinite scroll
+////////////////////////////////////////////
+
 function unbindScroll() {
-    console.log("scroll unbind");
+    //    console.log("scroll unbind");
     $(window).unbind("scroll");
 }
 
 function bindScroll() {
     unbindScroll();
     var win = $(window);
-    console.log("scroll bind");
+    //    console.log("scroll bind");
     $("#loading").hide();
 
     // Each time the user scrolls
@@ -34,25 +87,28 @@ function bindScroll() {
     });
 }
 
-var opts = { radius: 100, length: 50 };
-var spinner;
-
-function busy() {
-    if (spinner) spinner.stop();
-    spinner = new Spinner(opts).spin();
-    $("body").append(spinner.el);
-    $(".spinner").css({ position: "fixed" });
-
-    console.log("busy");
-}
-function unbusy() {
-    setTimeout(function() {
-        if (spinner) {
-            spinner.stop();
+////////////////////////////////////////////
+// busy/wait spinner
+////////////////////////////////////////////
+function BusySpinner() {
+    var opts = { radius: 100, length: 50 };
+    var spinner = new Spinner(opts);
+    return function(state) {
+        if ("busy" == state) {
+            spinner.spin();
+            $("body").append(spinner.el);
+            $(".spinner").css({ position: "fixed" });
+        } else {
+            // 'unbusy' == state
+            setTimeout(function() {
+                if (spinner) {
+                    spinner.stop();
+                }
+            }, 500);
         }
-        console.log("unbusy");
-    }, 500);
+    };
 }
+var spinner = BusySpinner();
 
 function createBreadcrumbs(arg) {
     var dirs = arg.split("/");
@@ -70,9 +126,15 @@ function createBreadcrumbs(arg) {
 
     return breadcrumbs;
 }
+
 function isNumeric(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
 }
+
+// Rather complicated sorting algo, but this is how I want it:
+// Dated albums first, in reverse chrono order, followed by alphabetized alphabetically
+// named albums
+
 function photoAlbumSort(type, namea, nameb) {
     var a = namea["dir"];
     var b = nameb["dir"];
@@ -102,6 +164,7 @@ function photoAlbumSort(type, namea, nameb) {
     return 0;
 }
 
+// Derive a legible caption from album dir name
 function captionAlbum(img) {
     var desc = img;
     if (img.match(/[0-9]{8}-.*/)) {
@@ -115,6 +178,8 @@ function captionAlbum(img) {
     }
     return desc;
 }
+
+// emit markup for a single photo
 function emitPhoto(dir, type, img) {
     var path = "";
     var matclass = "";
@@ -126,7 +191,7 @@ function emitPhoto(dir, type, img) {
     if ("album" == type) {
         path = (dir ? dir + "/" : "") + img["dir"];
         captionText = captionAlbum(img["dir"]);
-        onclick = ` onclick="photoalbum('` + path + `',0);" `;
+        onclick = ` onclick="photoalbum('${path}',0);" `;
         img = img["image"];
         matclass = "mat matbutton";
         frameclass = "album-frame";
@@ -157,100 +222,47 @@ function emitPhoto(dir, type, img) {
     return photo;
 }
 
-function photoalbum(dir, page) {
-    DIR = dir;
-    $("#breadcrumbs").html(createBreadcrumbs(dir));
-    if (!page) {
-        page = 0;
+///////////////////////////////////////////////
+// Dynamic resizing of images
+///////////////////////////////////////////////
+
+var resize = (function() {
+    var height = 150;
+    function apply() {
+        height = Number(height).toFixed(0);
+
+        // Kill the spinner after jquery is done
+        var dfd = $.Deferred();
+        dfd.done(() => {
+            $(".photo").height(height);
+        });
+        dfd.done(function() {
+            spinner("unbusy");
+        });
+        dfd.resolve();
     }
-    if (!page) {
-        bindScroll();
-    }
-    PAGE = page;
 
-    var query = config.apiServer + "/query/" + dir + `?page=${page}`;
-
-    busy();
-
-    $.ajax({
-        url: query,
-        success: function(result) {
-            if (!result.results.length) {
-                $("#loading").hide();
-                unbindScroll();
+    return {
+        apply: function() {
+            apply();
+        },
+        enlarge: function() {
+            spinner("busy");
+            var pct = 2;
+            height *= pct;
+            if (height > 700) {
+                height = 700;
             }
-
-            var photos = "";
-
-            result.results
-                .sort(function(a, b) {
-                    return photoAlbumSort(result.type, a, b);
-                })
-                .forEach(function(img) {
-                    photos += emitPhoto(dir, result.type, img);
-                });
-            if (page) {
-                $(".photos").append(photos);
-            } else {
-                $(".photos").html(photos);
+            apply();
+        },
+        reduce: function() {
+            spinner("busy");
+            var pct = 0.5;
+            height *= pct;
+            if (height < 100) {
+                height = 100;
             }
-            adjustCSS();
-            if (result.results.length) {
-                bindScroll();
-            }
+            apply();
         }
-    });
-}
-
-var basewidth = 150;
-var baseheight = 150;
-var perspective = basewidth / baseheight;
-
-function adjustHeight(height) {
-    console.log("adjustHeight");
-    $(".photo").height(height);
-}
-
-function adjustCSS() {
-    //    busy();
-
-    width = basewidth;
-    height = width / perspective;
-    width = width.toFixed(0);
-    height = height.toFixed(0);
-
-    //    $(".photo").height(height);
-
-    var dfd = $.Deferred();
-    dfd.done(adjustHeight(height));
-    dfd.done(function() {
-        unbusy();
-    });
-    dfd.resolve();
-}
-
-function enlargeImages() {
-    var pct = 1.5;
-
-    basewidth *= pct;
-
-    if (basewidth > 1000) {
-        basewidth = 1000;
-    }
-
-    baseheight = basewidth / perspective;
-    adjustCSS();
-}
-
-function reduceImages() {
-    var pct = 0.5;
-
-    basewidth *= pct;
-
-    if (basewidth < 50) {
-        basewidth = 50;
-    }
-
-    baseheight = basewidth / perspective;
-    adjustCSS();
-}
+    };
+})();

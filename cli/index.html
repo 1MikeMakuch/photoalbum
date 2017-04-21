@@ -1,49 +1,33 @@
 <!DOCTYPE html>
 <!-- Take a look at: https://css-tricks.com/snippets/css/a-guide-to-flexbox/ -->
 <html lang="en">
-
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
         <title>Mike's Photoalbum</title>
-
         <script src="js/config.js"></script>
         <link rel="stylesheet" type="text/css" href="css/pa.css">
         <link href="http://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-
-        <title>Photoalbum</title>
     </head>
     <body>
-
         <header>
-
             <div class="title">Mike's Photo Album</div>
-
             <div class="controls">
                 <div class="thumbnail-controls">
                     <div class="thumbnail-header">Image size:</div>
-                    <button class="thumbnail-sizers" onclick="enlargeImages();">Larger</button>
-                    <button class="thumbnail-sizers"  onclick="reduceImages();">Smaller</button>
+                    <button class="thumbnail-sizers" onclick="resize.enlarge();">Larger</button>
+                    <button class="thumbnail-sizers"  onclick="resize.reduce();">Smaller</button>
                 </div>
-
                 <div id="breadcrumbs" class="breadcrumbs" ></div>
-
             </div>
         </header>
         <hr />
-
-		<div class="photos">
+        <div class="photos">
         </div>
-
         <div id="loading">Loading...</div>
-
         <script src="js/jquery.min.js"></script>
         <script src="js/spin.min.js"></script>
         <script src="js/paclient.js"></script>
-
     </body>
 </html>

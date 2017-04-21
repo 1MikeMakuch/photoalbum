@@ -1,8 +1,6 @@
 
 /* pa.css */
 
-/*                       :root {} */
-
 #breadcrumbs {
     display              :inline-block;
     margin               :auto;
@@ -44,7 +42,11 @@
     display              :inline-block;
 }
 
-.breadcrumbs a           :link,.breadcrumbs a:visited,.breadcrumbs a:hover,.breadcrumbs a:active {
+.breadcrumbs a:link,
+.breadcrumbs a:visited,
+.breadcrumbs a:hover,
+.breadcrumbs a:active
+{
     color                :black;
     display              :inline-block;
     font-size            :large;
