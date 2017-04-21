@@ -76,7 +76,7 @@ function isNumeric(n) {
 function photoAlbumSort(type, namea, nameb) {
     var a = namea["dir"];
     var b = nameb["dir"];
-    console.log("paSort", a, b);
+
     if ("album" == type) {
         var r;
         if (isNumeric(a.substring(0, 1)) && isNumeric(b.substring(0, 1))) {
@@ -98,6 +98,7 @@ function photoAlbumSort(type, namea, nameb) {
         var imgb = nameb.replace(/.*\//, "");
         return imga.toLowerCase() > imgb.toLowerCase() ? 1 : -1;
     }
+
     return 0;
 }
 
