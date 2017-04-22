@@ -1,87 +1,93 @@
-// TODO get rid of these globals
-
-var PAGE = 0;
-var DIR = "";
-
 $(document).ready(function() {
-    photoalbum(DIR, PAGE);
+    photoalbum();
 });
 
-// main entry point, render markup for all photos in page N of dir
-function photoalbum(dir, page) {
-    function handleApiResponse(result) {
-        if (!result.results.length) {
-            $("#loading").hide();
-            unbindScroll();
-        }
+var photoalbum = (function() {
+    var DIR = "";
+    var page = -1;
+    var lastdir = "";
 
-        var photos = "";
-
-        result.results
-            .sort(function(a, b) {
-                return photoAlbumSort(result.type, a, b);
-            })
-            .forEach(function(img) {
-                photos += emitPhoto(dir, result.type, img);
-            });
-        if (page) {
-            $(".photos").append(photos);
+    // main entry point, render markup for all photos in page N of dir
+    return function(dir) {
+        if (undefined === dir) {
+            dir = DIR;
         } else {
-            $(".photos").html(photos);
+            DIR = dir;
         }
-        resize.apply();
-        if (result.results.length) {
+
+        if (dir == lastdir) {
+            page++;
+        } else {
+            page = 0;
+        }
+
+        $("#breadcrumbs").html(createBreadcrumbs(dir));
+        if (!page) {
+            page = 0;
+        }
+        if (!page) {
             bindScroll();
         }
-    }
+        //        PAGE = page;
 
-    DIR = dir;
-    $("#breadcrumbs").html(createBreadcrumbs(dir));
-    if (!page) {
-        page = 0;
-    }
-    if (!page) {
-        bindScroll();
-    }
-    PAGE = page;
+        var query = config.apiServer + "/query/" + dir + `?page=${page}`;
+        console.log("loading", dir, lastdir, page);
+        lastdir = dir;
 
-    var query = config.apiServer + "/query/" + dir + `?page=${page}`;
+        spinner("busy");
 
-    //    busy();
-    spinner("busy");
+        $.ajax({
+            url: query,
+            success: handleApiResponse
+        });
+        function handleApiResponse(result) {
+            if (!result.results.length) {
+                $("#loading").hide();
+                unbindScroll();
+            }
 
-    $.ajax({
-        url: query,
-        success: handleApiResponse
-    });
-}
+            var photos = "";
+
+            result.results
+                .sort(function(a, b) {
+                    return photoAlbumSort(result.type, a, b);
+                })
+                .forEach(function(img) {
+                    photos += emitPhoto(dir, result.type, img);
+                });
+            if (page) {
+                $(".photos").append(photos);
+            } else {
+                $(".photos").html(photos);
+            }
+            resize.apply();
+            if (result.results.length) {
+                bindScroll();
+            }
+        }
+    };
+})();
 
 ////////////////////////////////////////////
 // Infinite scroll
 ////////////////////////////////////////////
 
 function unbindScroll() {
-    //    console.log("scroll unbind");
     $(window).unbind("scroll");
 }
 
 function bindScroll() {
     unbindScroll();
     var win = $(window);
-    //    console.log("scroll bind");
     $("#loading").hide();
 
     // Each time the user scrolls
     win.scroll(function() {
         // End of the document reached?
-
         if ($(document).height() - win.height() == win.scrollTop()) {
-            PAGE++;
-            console.log("loading...", DIR, PAGE);
             unbindScroll();
-
             $("#loading").show();
-            photoalbum(DIR, PAGE);
+            photoalbum();
             $("#loading").hide();
         }
     });
@@ -90,7 +96,7 @@ function bindScroll() {
 ////////////////////////////////////////////
 // busy/wait spinner
 ////////////////////////////////////////////
-function BusySpinner() {
+var spinner = (function() {
     var opts = { radius: 100, length: 50 };
     var spinner = new Spinner(opts);
     return function(state) {
@@ -107,8 +113,7 @@ function BusySpinner() {
             }, 500);
         }
     };
-}
-var spinner = BusySpinner();
+})();
 
 function createBreadcrumbs(arg) {
     var dirs = arg.split("/");
@@ -227,7 +232,10 @@ function emitPhoto(dir, type, img) {
 ///////////////////////////////////////////////
 
 var resize = (function() {
+    const maxHeight = 700;
+    const minHeight = 100;
     var height = 150;
+
     function apply() {
         height = Number(height).toFixed(0);
 
@@ -241,28 +249,68 @@ var resize = (function() {
         });
         dfd.resolve();
     }
+    function enlargeEnable() {
+        $(".resize-enlarge").prop("disabled", false);
+        $(".resize-enlarge").css({
+            "border-bottom": "10px solid black"
+        });
+    }
+    function enlargeDisable() {
+        $(".resize-enlarge").prop("disabled", true);
+        $(".resize-enlarge").css({
+            "border-bottom": "10px solid gray"
+        });
+    }
+    function reduceDisable() {
+        $(".resize-reduce").prop("disabled", true);
+        $(".resize-reduce").css({
+            "border-top": "10px solid gray"
+        });
+    }
+    function reduceEnable() {
+        $(".resize-reduce").prop("disabled", false);
+        $(".resize-reduce").css({
+            "border-top": "10px solid black"
+        });
+    }
 
     return {
         apply: function() {
             apply();
         },
         enlarge: function() {
-            spinner("busy");
+            console.log("enlarge");
+            var save = height;
             var pct = 2;
             height *= pct;
-            if (height > 700) {
-                height = 700;
+            if (height > maxHeight) {
+                height = maxHeight;
+                enlargeDisable();
+            } else {
+                enlargeEnable();
             }
-            apply();
+            if (save != height) {
+                spinner("busy");
+                apply();
+            }
+            reduceEnable();
         },
         reduce: function() {
-            spinner("busy");
+            console.log("reduce");
+            var save = height;
             var pct = 0.5;
             height *= pct;
-            if (height < 100) {
-                height = 100;
+            if (height < minHeight) {
+                height = minHeight;
+                reduceDisable();
+            } else {
+                reduceEnable();
             }
-            apply();
+            if (save != height) {
+                spinner("busy");
+                apply();
+            }
+            enlargeEnable();
         }
     };
 })();
