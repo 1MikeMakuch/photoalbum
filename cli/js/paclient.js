@@ -1,7 +1,3 @@
-$(document).ready(function() {
-    photoalbum();
-});
-
 var photoalbum = (function() {
     var DIR = "";
     var page = -1;
@@ -28,18 +24,16 @@ var photoalbum = (function() {
         if (!page) {
             bindScroll();
         }
-        //        PAGE = page;
 
         var query = config.apiServer + "/query/" + dir + `?page=${page}`;
-        console.log("loading", dir, lastdir, page);
         lastdir = dir;
-
         spinner("busy");
 
         $.ajax({
             url: query,
             success: handleApiResponse
         });
+
         function handleApiResponse(result) {
             if (!result.results.length) {
                 $("#loading").hide();
@@ -96,6 +90,7 @@ function bindScroll() {
 ////////////////////////////////////////////
 // busy/wait spinner
 ////////////////////////////////////////////
+
 var spinner = (function() {
     var opts = { radius: 100, length: 50 };
     var spinner = new Spinner(opts);
@@ -114,6 +109,10 @@ var spinner = (function() {
         }
     };
 })();
+
+/////////////////////////////////////////////
+// breadcrumbs
+/////////////////////////////////////////////
 
 function createBreadcrumbs(arg) {
     var dirs = arg.split("/");
@@ -135,10 +134,11 @@ function createBreadcrumbs(arg) {
 function isNumeric(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
 }
-
+///////////////////////////////////////////////////////////////////////////
 // Rather complicated sorting algo, but this is how I want it:
-// Dated albums first, in reverse chrono order, followed by alphabetized alphabetically
-// named albums
+// Dated albums first, in reverse chrono order, followed by alphabetically
+// named albums in alpha order
+///////////////////////////////////////////////////////////////////////////
 
 function photoAlbumSort(type, namea, nameb) {
     var a = namea["dir"];
@@ -169,7 +169,9 @@ function photoAlbumSort(type, namea, nameb) {
     return 0;
 }
 
+//
 // Derive a legible caption from album dir name
+//
 function captionAlbum(img) {
     var desc = img;
     if (img.match(/[0-9]{8}-.*/)) {
@@ -184,7 +186,9 @@ function captionAlbum(img) {
     return desc;
 }
 
+//
 // emit markup for a single photo
+//
 function emitPhoto(dir, type, img) {
     var path = "";
     var matclass = "";
@@ -274,6 +278,7 @@ var resize = (function() {
         });
     }
 
+    // enlarge & reduce are called by the buttons
     return {
         apply: function() {
             apply();
@@ -314,3 +319,7 @@ var resize = (function() {
         }
     };
 })();
+
+$(document).ready(function() {
+    photoalbum();
+});
