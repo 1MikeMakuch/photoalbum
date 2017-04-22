@@ -26,7 +26,6 @@
     border-image         :url(/img/Album.png) 12% round;
     -o-border-image      :url(/img/Album.png) 12% round;
     -webkit-border-image :url(/img/Album.png) 12% round;
-
     display              :inline-block;
     font-size            :0;
     margin               :40px;
@@ -41,6 +40,7 @@
 .album-shadow {
     box-shadow           :15px 15px 8px 20px rgba(0,0,0,0.2);
     display              :inline-block;
+    background-color     :black;
 }
 
 .breadcrumbs a:link,
@@ -135,29 +135,30 @@
 
 }
 .resize-enlarge {
-    width: 0;
-    height: 0;
-    top:0;
-    left:0;
+    border-bottom: 10px solid black;
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
-    border-bottom: 10px solid black;
     display: inline-block;
+    height: 0;
+    left:0;
+    top:0;
     vertical-align: top;
+    width: 0;
 }
 
 .resize-reduce {
-    position:relative;
-    width: 0;
-    height: 0;
-    top:20px;
-    left:-24px;
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
     border-top: 10px solid black;
     display: inline-block;
+    height: 0;
+    left:-24px;
+    position:relative;
+    top:20px;
     vertical-align: top;
+    width: 0;
 }
+
 button {
     -moz-box-sizing:border-box;
     -webkit-box-sizing:border-box;
@@ -173,10 +174,7 @@ button {
     vertical-align:middle;
     white-space:normal;
     width:auto;
-
 }
-
-
 
 .title {
     display              :block;
