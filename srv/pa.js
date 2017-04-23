@@ -1,10 +1,10 @@
 // This is the api for the photoalbum client. Here's how it works:
 //
 // Photos exist in a directory structure on disk. There's a root dir. In the root dir are a
-// number of Album dirs. In each Album dir are a combination of more Albums and/or Chapters
-// which contain only pictures. Each Chapter has a raw dir containing the images (largest size).
+// number of dirs. In each Album dir are a combination of more Albums and/or Chapters
+// which contain only pictures. Each Chapter contains the raw images.
 //
-// A request queries the root with /query/ and receives the list of dirs in the root dir along
+// The client queries the root with /query/ and receives the list of dirs in the root dir along
 // with one image for a thumbnail to represent the Album.
 //
 // A /query/<dirX> is requesting either the Albums in that dir if it's an Album or the images
