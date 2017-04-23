@@ -1,23 +1,36 @@
+//  How this works
+//
+//  Query api for dirs in root
+//  Response contains list of dirs and a an image to use for thumbnail
+//  Each element represents an Album containing either more Albums or
+//   just images if a Chapter. Click on an Album to drill in. Use
+//   breadcrumbs to back up.
+
+//////////////////////////////////////////////////////////////////
+// main entry point, render markup for all photos in page N of dir
+//////////////////////////////////////////////////////////////////
+
 var photoalbum = (function() {
+    // Just a little private data
     var DIR = "";
     var page = -1;
     var lastdir = "";
 
-    // main entry point, render markup for all photos in page N of dir
     return function(dir) {
         if (undefined === dir) {
             dir = DIR;
         } else {
             DIR = dir;
         }
+        $("#breadcrumbs").html(createBreadcrumbs(dir));
 
         if (dir == lastdir) {
             page++;
         } else {
             page = 0;
         }
+        lastdir = dir;
 
-        $("#breadcrumbs").html(createBreadcrumbs(dir));
         if (!page) {
             page = 0;
         }
@@ -26,7 +39,7 @@ var photoalbum = (function() {
         }
 
         var query = config.apiServer + "/query/" + dir + `?page=${page}`;
-        lastdir = dir;
+
         spinner("busy");
 
         $.ajax({

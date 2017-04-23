@@ -1,3 +1,33 @@
+// This is the api for the photoalbum client. Here's how it works:
+//
+// Photos exist in a directory structure on disk. There's a root dir. In the root dir are a
+// number of Album dirs. In each Album dir are a combination of more Albums and/or Chapters
+// which contain only pictures. Each Chapter has a raw dir containing the images (largest size).
+//
+// A request queries the root with /query/ and receives the list of dirs in the root dir along
+// with one image for a thumbnail to represent the Album.
+//
+// A /query/<dirX> is requesting either the Albums in that dir if it's an Album or the images
+// in that dir if it's a Chapter. Albums are indicated with the presense of a file "album" in
+// the dir. Chapters are indicated with the presence of the "raw" dir.
+//
+// A request with no page parameter as above will return all elements. A page N is requested
+// with /query/<dirX>?page=N where N = 0,1,2...
+//
+// Example:
+//
+// ./1977/SixtyNine-Firebird/raw/Firebird06.jpg
+// ./1977/SixtyNine-Firebird/raw/Firebird07.jpg
+// ./1977/Skiing/raw/1200.jpg
+// ./1977/Skiing/raw/MeSkiing1978.jpg
+// ./1977/ZZTop/raw/img_3243.jpg
+// ./1977/ZZTop/raw/img_3244.jpg
+// ./1977/album
+// ./2000/20000601-BreakAtTheLake/raw/2P6020001.jpg
+// ./2000/20000601-BreakAtTheLake/raw/2P6020002.jpg
+// ./2000/20000601-BreakAtTheLake/raw/2P6020003.jpg
+// ./2000/album
+
 var express = require("express");
 var app = express();
 var cors = require("cors");
