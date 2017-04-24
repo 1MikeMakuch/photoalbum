@@ -6,6 +6,11 @@
     margin               : auto;
     text-align           : center;
     width                : 60%;
+    text-decoration      : none;
+
+}
+a:-webkit-any-link {
+    text-decoration      : none;
 }
 
 .album-caption {
@@ -191,4 +196,9 @@ button {
 header {
     text-align           : center;
     width                : 100%;
+}
+@media only screen and (max-width: 650px) {
+    .photos {width: 90%; height: 90%; margin: 0; padding; 0;}
+ /*   img.photo {width: 50%;  margin: 0; padding; 0;} */
+    .album-frame {margin: 0;}
 }

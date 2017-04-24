@@ -335,4 +335,20 @@ var resize = (function() {
 
 $(document).ready(function() {
     photoalbum();
+    var html = "";
+    html += "screen.availLeft " + screen.availLeft + "\n";
+    html += "screen.availTop " + screen.availTop + "\n";
+    html += "screen.availWidth " + screen.availWidth + "\n";
+    html += "screen.availHeight " + screen.availHeight + "\n";
+    html += "screen.width " + screen.width + "\n";
+    html += "screen.height " + screen.height + "\n";
+    html += "screen.colorDepth " + screen.colorDepth + "\n";
+    html += "screen.orientation.angle " + screen.orientation.angle + "\n";
+    html += "screen.orientation.onchange " + screen.orientation.onchange + "\n";
+    html += "screen.orientation.type " + screen.orientation.type + "\n";
+    html += "screen.pixelDepth " + screen.pixelDepth + "\n";
+    html += "screen.width " + screen.width + "\n";
+
+    console.log(html);
+    //    $(".photos").html(html);
 });
