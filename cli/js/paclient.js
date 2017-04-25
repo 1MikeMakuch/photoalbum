@@ -40,7 +40,7 @@ var photoalbum = (function() {
 
         var query = config.apiServer + "/query/" + dir + `?page=${page}`;
 
-        spinner("busy");
+        //        spinner("busy");
 
         $.ajax({
             url: query,
@@ -67,7 +67,7 @@ var photoalbum = (function() {
             } else {
                 $(".photos").html(photos);
             }
-            resize.apply();
+            //            resize.apply();
             if (result.results.length) {
                 bindScroll();
             }
@@ -209,16 +209,35 @@ function emitPhoto(dir, type, img) {
     var captionClass = "";
     var frameclass = "";
     var onclick = "";
+    var hrefClass = "";
+    var photo = "";
+    var imgLarge = config.assetsUrl + img;
+    var imgThumb = config.assetsUrl + img;
 
     if ("album" == type) {
         path = (dir ? dir + "/" : "") + img["dir"];
         captionText = captionAlbum(img["dir"]);
         onclick = ` onclick="photoalbum('${path}',0);" `;
         img = img["image"];
+        imgThumb = config.assetsUrl + img;
+        imgLarge = config.assetsUrl + img;
         matclass = "mat matbutton";
         frameclass = "album-frame";
         shadowclass = "album-shadow";
         captionClass = "album-caption";
+        hrefClass = "";
+        photo = `
+            <div class="${frameclass}">
+                <div class="${shadowclass}" >
+                    <div class="buffer">
+                        <div class="${matclass}">
+                            <img class="photo" ${onclick} src="${imgThumb}" />
+                        </div>
+                    </div>
+                    <div class="${captionClass}">${captionText}</div>
+                </div>
+            </div>
+        `;
     } else if ("chapter" == type) {
         onclick = "";
         matclass = "mat";
@@ -226,22 +245,41 @@ function emitPhoto(dir, type, img) {
         captionText = img.replace(/.*\//, "");
         shadowclass = "polaroid-shadow";
         captionClass = "polaroid-caption";
-    } else {
-        console.log("epic fail");
-        alert("epic fail");
-    }
-    var photo = `
+        hrefClass = "swipebox";
+        imgThumb = config.assetsUrl + img;
+        imgLarge = config.assetsUrl + img;
+        photo = `
             <div class="${frameclass}">
                 <div class="${shadowclass}" >
                     <div class="buffer">
                         <div class="${matclass}">
-                            <img class="photo" ${onclick} src="${config.assetsUrl + img}" />
+                           <a href="${imgLarge}" class="${hrefClass}" title="${captionText}" >
+                               <img src="${imgThumb}" class="photo " />
+                           </a>
                         </div>
                     </div>
                     <div class="${captionClass}">${captionText}</div>
                 </div>
-            </div>`;
+            </div>
+        `;
+    } else {
+        console.log("epic fail");
+        alert("epic fail");
+    }
+
     return photo;
+
+    //    photo = `
+    //            <div class="${frameclass}">
+    //                <div class="${shadowclass}" >
+    //                    <div class="buffer">
+    //                        <div class="${matclass}">
+    //                            <img class="photo" ${onclick} src="${config.assetsUrl + img}" />
+    //                        </div>
+    //                    </div>
+    //                    <div class="${captionClass}">${captionText}</div>
+    //                </div>
+    //            </div>`;
 }
 
 ///////////////////////////////////////////////
@@ -340,7 +378,7 @@ function swipeboxInit() {
 }
 
 $(document).ready(function() {
-    //    photoalbum();
+    photoalbum();
     var html = "";
     html += "screen.availLeft " + screen.availLeft + "\n";
     html += "screen.availTop " + screen.availTop + "\n";
@@ -359,7 +397,3 @@ $(document).ready(function() {
     //    $(".photos").html(html);
     swipeboxInit();
 });
-
-function xyzzy() {
-    console.log("xyzzy");
-}

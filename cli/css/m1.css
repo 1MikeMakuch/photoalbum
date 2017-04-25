@@ -2,3 +2,219 @@
 .thumbnail {
     width: 100px;
 }
+
+
+/* pa.css */
+
+#breadcrumbs {
+    display              : inline-block;
+    margin               : auto;
+    text-align           : center;
+    width                : 60%;
+    text-decoration      : none;
+
+}
+a:-webkit-any-link {
+    text-decoration      : none;
+}
+
+.album-caption {
+    background-color     : black;
+    color                : white;
+    display              : block;
+    font-size            : large;
+    height               : auto;
+    margin-top           : 5px;
+    text-align           : center;
+    width                : auto;
+}
+
+.album-frame {
+    /* order of these border props matters! border needs to be first */
+    border               : 25px solid transparent;
+    border-image         : url(/img/Album.png) 12% round;
+    -o-border-image      : url(/img/Album.png) 12% round;
+    -webkit-border-image : url(/img/Album.png) 12% round;
+    display              : inline-block;
+    font-size            : 0;
+    margin               : 40px;
+}
+
+.album-image {
+    border               : 1px solid gray;
+    display              : inline-block;
+    position             : relative;
+}
+
+.album-shadow {
+    box-shadow           : 15px 15px 8px 20px rgba(0,0,0,0.2);
+    display              : inline-block;
+    background-color     : black;
+}
+
+.breadcrumbs a: active
+.breadcrumbs a: hover,
+.breadcrumbs a: link,
+.breadcrumbs a: visited,
+{
+    color                : black;
+    display              : inline-block;
+    font-size            : large;
+    text-align           : center;
+    text-decoration      : none;
+}
+
+.controls {
+    display              : block;
+    text-align           : left;
+}
+
+.mat {
+    border-color         : white;
+    border-style         : solid;
+    border-width         : 10px;
+    display              : inline-block;
+    height               : auto;
+    padding              : 0;
+    width                : auto;
+}
+
+.matbutton {
+    cursor               : pointer;
+}
+
+.photos {
+    display              : inline-block;
+    text-align           : center;
+    width                : 90%;
+}
+
+.polaroid-caption {
+    background-color     : white;
+    color                : #d0d0d0;
+    display              : inline-block;
+    font-size            : small;
+    height               : auto;
+    margin-top           : 0;
+    text-align           : center;
+    width                : 100%;
+}
+
+.polaroid-frame {
+    background-color     : white;
+    border-color         : white;
+    border-style         : solid;
+    border-width         : 2px;
+    box-shadow           : 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    box-sizing           : border-box;
+    display              : inline-block;
+    height               : auto;
+    margin               : 20px;
+    vertical-align       : top;
+    width                : auto;
+}
+
+.resize-controls {
+    display              : inline-block;
+    width                : 20%;
+}
+
+.resize-header {
+    display              : inline-block;
+    vertical-align: top;
+}
+
+.resize-sizers {
+    cursor               : pointer;
+}
+
+/*
+.resize-sizers: active {
+
+}
+*/
+
+.resize-sizers: hover {
+    outline: 2px;
+}
+
+.resize-enlarge {
+    border-bottom  : 10px solid black;
+    border-left    : 10px solid transparent;
+    border-right   : 10px solid transparent;
+    display        : inline-block;
+    height         : 0;
+    left           : 0;
+    top            : 0;
+    vertical-align : top;
+    width          : 0;
+}
+
+.resize-reduce {
+    border-left    : 10px solid transparent;
+    border-right   : 10px solid transparent;
+    border-top     : 10px solid black;
+    display        : inline-block;
+    height         : 0;
+    left           : -24px;
+    position       : relative;
+    top            : 20px;
+    vertical-align : top;
+    width          : 0;
+}
+
+.title {
+    display              : block;
+    font-size            : 2em;
+}
+
+body {
+    background-color     : #d0d0d0;
+    margin               : 0;
+    text-align           : center;
+}
+
+button {
+    /* zero out button */
+    -moz-box-sizing    : border-box;
+    -webkit-box-sizing : border-box;
+    background         : none;
+    border             : none;
+    box-sizing         : border-box;
+    display            : inline-block;
+    line-height        : 1;
+    margin             : 0;
+    outline            : none;
+    overflow           : visible;
+    padding            : 0;
+    vertical-align     : middle;
+    white-space        : normal;
+    width              : auto;
+}
+
+header {
+    text-align           : center;
+    width                : 100%;
+}
+
+.photo {
+    display              : block;
+    height               : 150px;
+    width                : auto;
+}
+
+@media only screen and (max-width: 640px) {
+    /*     .photos {width: 90%; height: 90%; margin: 0; padding; 0;} */
+    /*     img.photo {width: 50%;  margin: 0; padding; 0;} */
+
+    .album-frame {margin: 10;}
+
+    img.photo {
+        height: auto;
+    }
+
+    .photo {
+        height: auto;
+        width: 300px;
+    }
+}
