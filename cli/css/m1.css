@@ -86,7 +86,7 @@ a:-webkit-any-link {
 .photos {
     display              : inline-block;
     text-align           : center;
-    width                : 90%;
+
 }
 
 .polaroid-caption {
@@ -203,18 +203,35 @@ header {
     width                : auto;
 }
 
-@media only screen and (max-width: 640px) {
-    /*     .photos {width: 90%; height: 90%; margin: 0; padding; 0;} */
-    /*     img.photo {width: 50%;  margin: 0; padding; 0;} */
+@media only screen and (max-width: 640px) and (orientation: landscape) {
 
-    .album-frame {margin: 10;}
-
-    img.photo {
-        height: auto;
+    .album-frame {
+        margin: 10px;
+        display: block;
     }
 
     .photo {
+        max-height: 60vh;
         height: auto;
-        width: 300px;
+    }
+
+    .resize-controls {
+        visibility: hidden;
+    }
+}
+@media only screen and (max-width: 640px) and (orientation: portrait) {
+
+    .album-frame {
+        display: block;
+        margin: 10px;
+    }
+
+    .photo {
+        max-width: 70vw;
+        height: auto;
+    }
+
+    .resize-controls {
+        visibility: hidden;
     }
 }

@@ -40,7 +40,7 @@ var photoalbum = (function() {
 
         var query = config.apiServer + "/query/" + dir + `?page=${page}`;
 
-        //        spinner("busy");
+        spinner("busy");
 
         $.ajax({
             url: query,
@@ -67,7 +67,7 @@ var photoalbum = (function() {
             } else {
                 $(".photos").html(photos);
             }
-            //            resize.apply();
+            resize.apply();
             if (result.results.length) {
                 bindScroll();
             }
@@ -297,7 +297,7 @@ var resize = (function() {
         // Kill the spinner after jquery is done
         var dfd = $.Deferred();
         dfd.done(() => {
-            $(".photo").height(height);
+            //            $(".photo").height(height);
         });
         dfd.done(function() {
             spinner("unbusy");
