@@ -333,8 +333,14 @@ var resize = (function() {
     };
 })();
 
+function swipeboxInit() {
+    (function($) {
+        $(".swipebox").swipebox();
+    })(jQuery);
+}
+
 $(document).ready(function() {
-    photoalbum();
+    //    photoalbum();
     var html = "";
     html += "screen.availLeft " + screen.availLeft + "\n";
     html += "screen.availTop " + screen.availTop + "\n";
@@ -349,6 +355,11 @@ $(document).ready(function() {
     html += "screen.pixelDepth " + screen.pixelDepth + "\n";
     html += "screen.width " + screen.width + "\n";
 
-    console.log(html);
+    //   console.log(html);
     //    $(".photos").html(html);
+    swipeboxInit();
 });
+
+function xyzzy() {
+    console.log("xyzzy");
+}
