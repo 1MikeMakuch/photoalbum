@@ -297,7 +297,7 @@ var resize = (function() {
         // Kill the spinner after jquery is done
         var dfd = $.Deferred();
         dfd.done(() => {
-            //            $(".photo").height(height);
+            $(".photo").height(height);
         });
         dfd.done(function() {
             spinner("unbusy");

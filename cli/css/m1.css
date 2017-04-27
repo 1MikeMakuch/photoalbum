@@ -203,35 +203,30 @@ header {
     width                : auto;
 }
 
-@media only screen and (max-width: 640px) and (orientation: landscape) {
-
+@media only screen and (max-width: 640px) {
     .album-frame {
-        margin: 10px;
         display: block;
+        margin: 10px;
     }
-
-    .photo {
-        max-height: 60vh;
-        height: auto;
+    .polaroid-frame {
+        display              : block;
+        margin               : 10px;
     }
-
     .resize-controls {
         visibility: hidden;
     }
 }
-@media only screen and (max-width: 640px) and (orientation: portrait) {
 
-    .album-frame {
-        display: block;
-        margin: 10px;
-    }
-
+@media only screen and (max-width: 640px) and (orientation: landscape) {
     .photo {
-        max-width: 70vw;
         height: auto;
+        max-height: 60vh;
     }
+}
 
-    .resize-controls {
-        visibility: hidden;
+@media only screen and (max-width: 640px) and (orientation: portrait) {
+    .photo {
+        height: auto;
+        max-width: 70vw;
     }
 }
