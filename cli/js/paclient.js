@@ -10,6 +10,12 @@
 // main entry point, render markup for all photos in page N of dir
 //////////////////////////////////////////////////////////////////
 
+// <picture>
+// <source srcset="img_smallflower.jpg" media="(max-width: 400px)">
+// <source srcset="img_flowers.jpg">
+// <img src="img_flowers.jpg" alt="Flowers">
+// </picture>
+
 var photoalbum = (function() {
     // Just a little private data
     var DIR = "";
@@ -205,76 +211,72 @@ function captionAlbum(img) {
 function emitPhoto(dir, type, img) {
     console.log("img", img);
     var path = "";
-    var matclass = "";
     var captionText = "";
-    var captionClass = "";
-    var frameclass = "";
     var onclick = "";
-    var hrefClass = "";
     var photo = "";
 
+    // on mobile never DL the raw (big) image
     var mq = window.matchMedia("(max-width: 640px)");
-    var largeSize = "/raw/";
+    var swipeboxSize = "/raw/";
     if (mq.matches) {
-        largeSize = "/1000/";
+        swipeboxSize = "/1000/";
     }
-    var imgSmall = String(config.assetsUrl + img).replace("/raw/", "/1000/");
-    var imgLarge = String(config.assetsUrl + img).replace("/raw/", largeSize);
+    var imgThumbnail = String(config.assetsUrl + img).replace(
+        "/raw/",
+        "/1000/"
+    );
+    var imgSwipebox = String(config.assetsUrl + img).replace(
+        "/raw/",
+        swipeboxSize
+    );
 
     if ("album" == type) {
         path = (dir ? dir + "/" : "") + img["dir"];
         captionText = captionAlbum(img["dir"]);
         onclick = ` onclick="photoalbum('${path}',0);" `;
-        img = img["image"];
-        imgSmall = String(config.assetsUrl + img).replace("/raw/", "/1000/");
-        imgLarge = String(config.assetsUrl + img).replace("/raw/", largeSize);
-        matclass = "mat matbutton";
-        frameclass = "album-frame";
-        shadowclass = "album-shadow";
-        captionClass = "album-caption";
-        hrefClass = "";
+        imgThumbnail = String(config.assetsUrl + img["image"]).replace(
+            "/raw/",
+            "/1000/"
+        );
+
+        // Saving this in case I want to use it soon:
+        //        <picture ${onclick} >
+        //        <source srcset="${imgLarge}" media=" (min-width: 641)">
+        //        <source srcset="${imgThumbnail}" media=" (max-width: 640px)">
+        //        <img class="photo" src="${imgLarge}" />
+        //        </picture>
+
+        // For now I'm just using 1000 wide images for the thumbnails whether small
+        // or large screen, maybe good enough. Only show the large raw image size
+        // on large screen swipebox.  I could further optimize for mobile and show smaller
+        // than 1000wide thumbnails, but I want to minimize the file count on S3 as I
+        // have many hundred GB. If this were a consumer facing app I'm sure we'd
+        // optimize further by screen size.
 
         photo = `
-            <div class="${frameclass}">
-                <div class="${shadowclass}" >
-                    <div class="buffer">
-                        <div class="${matclass}">
-<picture ${onclick} >
-    <source srcset="${imgLarge}" media=" (min-width: 641)">
-    <source srcset="${imgSmall}" media=" (max-width: 640px)">
-    <img class="photo" src="${imgLarge}" />
-</picture>
-                        </div>
+            <div class="album-frame">
+                <div class="album-shadow" >
+                    <div class="mat matbutton">
+                        <img class="photo" src="${imgThumbnail}" ${onclick} />
                     </div>
-                    <div class="${captionClass}">${captionText}</div>
+                    <div class="album-caption">${captionText}</div>
                 </div>
             </div>
         `;
     } else if ("chapter" == type) {
-        onclick = "";
-        matclass = "mat";
-        frameclass = "polaroid-frame";
-        captionText = img.replace(/.*\//, "");
-        shadowclass = "polaroid-shadow";
-        captionClass = "polaroid-caption";
-        hrefClass = "swipebox";
+        // Polaroid
 
-        // <img src="${imgSmall}" class="photo " />
+        // For now just use file name w/out leading path
+        captionText = img.replace(/.*\//, "");
         photo = `
-            <div class="${frameclass}">
-                <div class="${shadowclass}" >
-                    <div class="buffer">
-                        <div class="${matclass}">
-                           <a href="${imgLarge}" class="${hrefClass}" title="${captionText}" >
-<picture ${onclick}>
-    <source srcset="${imgLarge}" media=" (min-width: 641)">
-    <source srcset="${imgSmall}" media=" (max-width: 640px)">
-    <img class="photo" src="${imgLarge}" />
-</picture>
-                           </a>
-                        </div>
+            <div class="polaroid-frame">
+                <div class="polaroid-shadow">
+                    <div class="mat">
+                       <a href="${imgSwipebox}" class="swipebox" title="${captionText}" >
+                           <img class="photo" src="${imgThumbnail}"  />
+                       </a>
                     </div>
-                    <div class="${captionClass}">${captionText}</div>
+                    <div class="polaroid-caption">${captionText}</div>
                 </div>
             </div>
         `;
@@ -282,21 +284,7 @@ function emitPhoto(dir, type, img) {
         console.log("epic fail");
         alert("epic fail");
     }
-    //    console.log("image:", imgLarge, imgSmall);
-
     return photo;
-
-    //    photo = `
-    //            <div class="${frameclass}">
-    //                <div class="${shadowclass}" >
-    //                    <div class="buffer">
-    //                        <div class="${matclass}">
-    //                            <img class="photo" ${onclick} src="${config.assetsUrl + img}" />
-    //                        </div>
-    //                    </div>
-    //                    <div class="${captionClass}">${captionText}</div>
-    //                </div>
-    //            </div>`;
 }
 
 ///////////////////////////////////////////////
