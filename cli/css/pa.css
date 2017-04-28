@@ -1,4 +1,9 @@
 
+.thumbnail {
+    width: 100px;
+}
+
+
 /* pa.css */
 
 #breadcrumbs {
@@ -78,16 +83,10 @@ a:-webkit-any-link {
     cursor               : pointer;
 }
 
-.photo {
-    display              : block;
-    height               : 150px;
-    width                : auto;
-}
-
 .photos {
     display              : inline-block;
     text-align           : center;
-    width                : 90%;
+
 }
 
 .polaroid-caption {
@@ -130,10 +129,10 @@ a:-webkit-any-link {
 }
 
 /*
-.resize-sizers: active {
+   .resize-sizers: active {
 
-}
-*/
+   }
+ */
 
 .resize-sizers: hover {
     outline: 2px;
@@ -197,8 +196,42 @@ header {
     text-align           : center;
     width                : 100%;
 }
-@media only screen and (max-width: 650px) {
-    .photos {width: 90%; height: 90%; margin: 0; padding; 0;}
- /*   img.photo {width: 50%;  margin: 0; padding; 0;} */
-    .album-frame {margin: 0;}
+
+.photo {
+    display              : block;
+    height               : 140px;
+    width                : auto;
+}
+
+@media only screen and (max-width: 640px) {
+    /* switch to block to force 1 per row, then we need shadow to be block too
+       so it takes full width of album-frame */
+
+    .album-frame {
+        display: block;
+        margin: 10px;
+    }
+    .album-shadow {
+        display: block;
+    }
+    .polaroid-frame {
+        display              : block;
+        margin               : 10px;
+    }
+    .resize-controls {
+        visibility: hidden;
+    }
+}
+
+@media only screen and (max-width: 640px) and (orientation: landscape) {
+    .photo {
+        max-height: 60vh;
+    }
+}
+
+@media only screen and (max-width: 640px) and (orientation: portrait) {
+    .photo {
+        height: auto;
+        max-width: 70vw;
+    }
 }
