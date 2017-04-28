@@ -204,37 +204,47 @@ function hasChapterSemaphore(dir) {
 }
 
 function getThumb(dir) {
-    //console.log('getThumb',dir);
-    return readDir(dir).then(function(files) {
-        if ([] == files) {
-            return [];
-        }
-        var i = 0;
-
-        return (function next() {
-            var file = files[i++];
-
-            if (!file) {
-                return "";
+    var raw = dir + "/raw";
+    //    console.log("getThumb", dir, raw);
+    return pathExists(raw)
+        .then(function(rawExists) {
+            if (rawExists) {
+                return raw;
+            } else {
+                return dir;
             }
-            file = dir + "/" + file;
-            //console.log('next', file);
+        })
+        .then(function(subdir) {
+            dir = subdir;
+            return readDir(dir);
+        })
+        .then(function(files) {
+            if ([] == files) {
+                return [];
+            }
+            var i = 0;
 
-            return isDirectory(file).then(function(isDir) {
-                if (isDir) {
-                    //console.log('isDir', file);
-                    return getThumb(file);
-                } else {
-                    //console.log('!isDir', file);
-                    if (file.match(/jpg$/i)) {
-                        return file;
-                    } else {
-                        return next();
-                    }
+            return (function nextFile() {
+                var file = files[i++];
+
+                if (!file) {
+                    return "";
                 }
-            });
-        })();
-    });
+                file = dir + "/" + file;
+
+                return isDirectory(file).then(function(isDir) {
+                    if (isDir) {
+                        return getThumb(file);
+                    } else {
+                        if (file.match(/jpg$/i)) {
+                            return file;
+                        } else {
+                            return nextFile();
+                        }
+                    }
+                });
+            })();
+        });
 }
 function getPics(dir, page) {
     dir += "/raw";
@@ -347,7 +357,6 @@ function getDirsAndThumbs(dir, page) {
             });
 
             return Promise.all(promises).then(function(thumbs) {
-                //console.log('Promise.all.then',thumbs);
                 var results = [];
                 for (var i = 0; i < dirs.length; i++) {
                     results.push({ dir: dirs[i], image: thumbs[i] });

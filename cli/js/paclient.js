@@ -203,6 +203,7 @@ function captionAlbum(img) {
 // emit markup for a single photo
 //
 function emitPhoto(dir, type, img) {
+    console.log("img", img);
     var path = "";
     var matclass = "";
     var captionText = "";
@@ -211,27 +212,38 @@ function emitPhoto(dir, type, img) {
     var onclick = "";
     var hrefClass = "";
     var photo = "";
-    var imgLarge = config.assetsUrl + img;
-    var imgThumb = config.assetsUrl + img;
+
+    var mq = window.matchMedia("(max-width: 640px)");
+    var largeSize = "/raw/";
+    if (mq.matches) {
+        largeSize = "/1000/";
+    }
+    var imgSmall = String(config.assetsUrl + img).replace("/raw/", "/1000/");
+    var imgLarge = String(config.assetsUrl + img).replace("/raw/", largeSize);
 
     if ("album" == type) {
         path = (dir ? dir + "/" : "") + img["dir"];
         captionText = captionAlbum(img["dir"]);
         onclick = ` onclick="photoalbum('${path}',0);" `;
         img = img["image"];
-        imgThumb = config.assetsUrl + img;
-        imgLarge = config.assetsUrl + img;
+        imgSmall = String(config.assetsUrl + img).replace("/raw/", "/1000/");
+        imgLarge = String(config.assetsUrl + img).replace("/raw/", largeSize);
         matclass = "mat matbutton";
         frameclass = "album-frame";
         shadowclass = "album-shadow";
         captionClass = "album-caption";
         hrefClass = "";
+
         photo = `
             <div class="${frameclass}">
                 <div class="${shadowclass}" >
                     <div class="buffer">
                         <div class="${matclass}">
-                            <img class="photo" ${onclick} src="${imgThumb}" />
+<picture ${onclick} >
+    <source srcset="${imgLarge}" media=" (min-width: 641)">
+    <source srcset="${imgSmall}" media=" (max-width: 640px)">
+    <img class="photo" src="${imgLarge}" />
+</picture>
                         </div>
                     </div>
                     <div class="${captionClass}">${captionText}</div>
@@ -246,15 +258,19 @@ function emitPhoto(dir, type, img) {
         shadowclass = "polaroid-shadow";
         captionClass = "polaroid-caption";
         hrefClass = "swipebox";
-        imgThumb = config.assetsUrl + img;
-        imgLarge = config.assetsUrl + img;
+
+        // <img src="${imgSmall}" class="photo " />
         photo = `
             <div class="${frameclass}">
                 <div class="${shadowclass}" >
                     <div class="buffer">
                         <div class="${matclass}">
                            <a href="${imgLarge}" class="${hrefClass}" title="${captionText}" >
-                               <img src="${imgThumb}" class="photo " />
+<picture ${onclick}>
+    <source srcset="${imgLarge}" media=" (min-width: 641)">
+    <source srcset="${imgSmall}" media=" (max-width: 640px)">
+    <img class="photo" src="${imgLarge}" />
+</picture>
                            </a>
                         </div>
                     </div>
@@ -266,6 +282,7 @@ function emitPhoto(dir, type, img) {
         console.log("epic fail");
         alert("epic fail");
     }
+    //    console.log("image:", imgLarge, imgSmall);
 
     return photo;
 
@@ -292,8 +309,15 @@ var resize = (function() {
     const maxHeight = 800;
     const minHeight = 100;
     var height = 200;
+    var mq = window.matchMedia("(max-width: 640px)");
 
     function apply() {
+        if (mq.matches) {
+            // don't resize mobile
+            spinner("unbusy");
+            return;
+        }
+
         height = Number(height).toFixed(0);
         console.log("resize", height);
 

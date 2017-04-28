@@ -204,9 +204,15 @@ header {
 }
 
 @media only screen and (max-width: 640px) {
+    /* switch to block to force 1 per row, then we need shadow to be block too
+     so it takes full width of album-frame */
+
     .album-frame {
         display: block;
         margin: 10px;
+    }
+    .album-shadow {
+        display: block;
     }
     .polaroid-frame {
         display              : block;
@@ -219,7 +225,6 @@ header {
 
 @media only screen and (max-width: 640px) and (orientation: landscape) {
     .photo {
-        height: auto;
         max-height: 60vh;
     }
 }
