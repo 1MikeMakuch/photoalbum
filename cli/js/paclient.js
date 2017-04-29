@@ -54,6 +54,7 @@ var photoalbum = (function() {
         });
 
         function handleApiResponse(result) {
+            console.log("result", result);
             var mediaQuery = window.matchMedia("(max-width: 640px)");
 
             if (!result.results.length) {
@@ -193,8 +194,8 @@ function photoAlbumSort(type, namea, nameb) {
         }
         return r;
     } else if ("chapter" == type) {
-        var imga = namea.replace(/.*\//, "");
-        var imgb = nameb.replace(/.*\//, "");
+        var imga = namea["image"].replace(/.*\//, "");
+        var imgb = nameb["image"].replace(/.*\//, "");
         return imga.toLowerCase() > imgb.toLowerCase() ? 1 : -1;
     }
 
@@ -235,18 +236,8 @@ function emitPhoto(dir, type, img, mediaQuery) {
     const sizeSwipeboxMobile = "/1000/";
     const sizeSwipeboxDesktop = "/raw/";
 
-    var imgDir = "";
-    var imgPath = "";
-
-    if ("album" == type) {
-        imgDir = img["dir"];
-        imgPath = img["image"];
-    } else if ("chapter" == type) {
-        imgPath = img;
-    } else {
-        console.log("epic fail 0");
-        alert("epic fail 0");
-    }
+    var imgDir = img["dir"] || "";
+    var imgPath = img["image"] || "";
 
     var imgThumbnailMobile = String(config.assetsUrl + imgPath).replace(
         "/raw/",
@@ -291,7 +282,7 @@ function emitPhoto(dir, type, img, mediaQuery) {
         `;
     } else if ("chapter" == type) {
         // Polaroid, for now just use file name w/out leading path
-        captionText = img.replace(/.*\//, "");
+        captionText = imgPath.replace(/.*\//, "");
 
         photo = `
             <div class="polaroid-frame">

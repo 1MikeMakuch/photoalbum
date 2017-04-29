@@ -73,7 +73,7 @@ app.get(/^\/query\/((?:[^\/]+\/?)+)\/*/, function(req, res) {
     console.log(req.url);
     var dir = req.params[0].split("/");
     dir = dir.join("/");
-    console.log("query", req.query);
+    dir = dir.replace(/\/$/, "");
 
     return verifyDir(dir, req.query)
         .then(function(vres) {
@@ -247,7 +247,7 @@ function getThumb(dir) {
         });
 }
 function getPics(dir, page) {
-    dir += "/raw";
+    dir += "raw";
     return readDir(dir)
         .then(function(pics) {
             console.log("getPics", pics);
@@ -257,7 +257,7 @@ function getPics(dir, page) {
             paths = [];
             pics.forEach(function(file) {
                 if (file.match(/jpg$/i)) {
-                    paths.push(dir + "/" + file);
+                    paths.push({ image: dir + "/" + file });
                 }
             });
             return paths;
