@@ -102,14 +102,12 @@ function bindScroll() {
     win.scroll(function() {
         // End of the document reached?
 
-        console.log(
-            "scroll",
-            $(document).height(),
-            win.height(),
-            win.scrollTop()
-        );
+		var top = ($(window).scrollTop() || $("body").scrollTop());
+        var diff = $(document).height() - win.height() ;
 
-        if ($(document).height() - win.height() == win.scrollTop()) {
+        console.log( "scroll", $(document).height(), win.height(), diff, top, top+100);
+
+        if ($(document).height() - win.height() <= (top+100)) {
             console.log("hit bottom!!!!!");
             unbindScroll();
             $("#loading").show();
