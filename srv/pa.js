@@ -247,10 +247,9 @@ function getThumb(dir) {
         });
 }
 function getPics(dir, page) {
-    dir += "raw";
+    dir += "/raw";
     return readDir(dir)
         .then(function(pics) {
-            console.log("getPics", pics);
             return pics.sort(imgSort);
         })
         .then(function(pics) {
