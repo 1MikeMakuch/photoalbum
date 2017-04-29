@@ -54,6 +54,8 @@ var photoalbum = (function() {
         });
 
         function handleApiResponse(result) {
+            var mediaQuery = window.matchMedia("(max-width: 640px)");
+
             if (!result.results.length) {
                 $("#loading").hide();
                 unbindScroll();
@@ -66,7 +68,7 @@ var photoalbum = (function() {
                     return photoAlbumSort(result.type, a, b);
                 })
                 .forEach(function(img) {
-                    photos += emitPhoto(dir, result.type, img);
+                    photos += emitPhoto(dir, result.type, img, mediaQuery);
                 });
             if (page) {
                 $(".photos").append(photos);
@@ -219,54 +221,69 @@ function captionAlbum(img) {
 //
 // emit markup for a single photo
 //
-function emitPhoto(dir, type, img) {
-    //    console.log("img", img);
+function emitPhoto(dir, type, img, mediaQuery) {
     var path = "";
     var captionText = "";
     var onclick = "";
     var photo = "";
 
-    // on mobile never DL the raw (big) image
-    var mq = window.matchMedia("(max-width: 640px)");
-    var swipeboxSize = "/raw/";
-    var thumbnailSize = "/1000/";
+    // desktop: thumb 1000, swipe raw
+    // mobile: thumb 640,   swipe 1000
 
-    if (mq.matches) {
-        swipeboxSize = "/1000/";
-        thumbnailSize = "/640/";
-    }
+    const sizeThumbnailMobile = "/640/";
+    const sizeThumbnailDesktop = "/1000/";
+    const sizeSwipeboxMobile = "/1000/";
+    const sizeSwipeboxDesktop = "/raw/";
 
-    var imgThumbnail;
+    var imgDir = "";
+    var imgPath = "";
 
     if ("album" == type) {
-        path = (dir ? dir + "/" : "") + img["dir"];
-        captionText = captionAlbum(img["dir"]);
+        imgDir = img["dir"];
+        imgPath = img["image"];
+    } else if ("chapter" == type) {
+        imgPath = img;
+    } else {
+        console.log("epic fail 0");
+        alert("epic fail 0");
+    }
+
+    var imgThumbnailMobile = String(config.assetsUrl + imgPath).replace(
+        "/raw/",
+        sizeThumbnailMobile
+    );
+    var imgThumbnailDesktop = String(config.assetsUrl + imgPath).replace(
+        "/raw/",
+        sizeThumbnailDesktop
+    );
+    var imgSwipeboxMobile = String(config.assetsUrl + imgPath).replace(
+        "/raw/",
+        sizeSwipeboxMobile
+    );
+    var imgSwipeboxDesktop = String(config.assetsUrl + imgPath).replace(
+        "/raw/",
+        sizeSwipeboxDesktop
+    );
+
+    var imgSwipebox, imgThumbnail;
+    if (mediaQuery.matches) {
+        imgSwipebox = imgSwipeboxMobile;
+        imgThumbnail = imgThumbnailMobile;
+    } else {
+        imgSwipebox = imgSwipeboxDesktop;
+        imgThumbnail = imgThumbnailDesktop;
+    }
+
+    if ("album" == type) {
+        path = (dir ? dir + "/" : "") + imgDir;
+        captionText = captionAlbum(imgDir);
         onclick = ` onclick="photoalbum('${path}',0);" `;
-        imgThumbnail = String(config.assetsUrl + img["image"]).replace(
-            "/raw/",
-            thumbnailSize
-        );
-        //        console.log("ith", imgThumbnail);
-
-        // Saving this in case I want to use it soon:
-        //        <picture ${onclick} >
-        //        <source srcset="${imgLarge}" media=" (min-width: 641)">
-        //        <source srcset="${imgThumbnail}" media=" (max-width: 640px)">
-        //        <img class="photo" src="${imgLarge}" />
-        //        </picture>
-
-        // For now I'm just using 1000 wide images for the thumbnails whether small
-        // or large screen, maybe good enough. Only show the large raw image size
-        // on large screen swipebox.  I could further optimize for mobile and show smaller
-        // than 1000wide thumbnails, but I want to minimize the file count on S3 as I
-        // have many hundred GB. If this were a consumer facing app I'm sure we'd
-        // optimize further by screen size.
 
         photo = `
             <div class="album-frame">
                 <div class="album-shadow" >
                     <div class="mat matbutton">
-                        <img class="photo" src="${imgThumbnail}" ${onclick} />
+                        <img ${onclick} class="photo" src="${imgThumbnail}" />
                     </div>
                     <div class="album-caption">${captionText}</div>
                 </div>
@@ -275,21 +292,14 @@ function emitPhoto(dir, type, img) {
     } else if ("chapter" == type) {
         // Polaroid, for now just use file name w/out leading path
         captionText = img.replace(/.*\//, "");
-        var imgSwipebox = String(config.assetsUrl + img).replace(
-            "/raw/",
-            swipeboxSize
-        );
-        imgThumbnail = String(config.assetsUrl + img).replace(
-            "/raw/",
-            thumbnailSize
-        );
+
         photo = `
             <div class="polaroid-frame">
                 <div class="polaroid-buffer">
                     <div class="mat">
-                       <a href="${imgSwipebox}" class="swipebox" title="${captionText}" >
-                           <img class="photo" src="${imgThumbnail}"  />
-                       </a>
+                      <a href="${imgSwipebox}" class="swipebox" title="${captionText}">
+                          <img ${onclick} class="photo" src="${imgThumbnail}" />
+                      </a>
                     </div>
                     <div class="polaroid-caption">${captionText}</div>
                 </div>
@@ -299,6 +309,7 @@ function emitPhoto(dir, type, img) {
         console.log("epic fail");
         alert("epic fail");
     }
+
     return photo;
 }
 
