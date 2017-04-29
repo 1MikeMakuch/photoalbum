@@ -102,12 +102,12 @@ function bindScroll() {
     win.scroll(function() {
         // End of the document reached?
 
-		var top = ($(window).scrollTop() || $("body").scrollTop());
-        var diff = $(document).height() - win.height() ;
+        var top = $(window).scrollTop() || $("body").scrollTop();
+        var diff = $(document).height() - win.height();
 
-        console.log( "scroll", $(document).height(), win.height(), diff, top, top+100);
-
-        if ($(document).height() - win.height() <= (top+100)) {
+        //      console.log( "scroll", $(document).height(), win.height(), diff, top, top+100);
+        // not sure why have to add 100 to top but otherwise it sometimes never hits bottom
+        if ($(document).height() - win.height() <= top + 100) {
             console.log("hit bottom!!!!!");
             unbindScroll();
             $("#loading").show();
@@ -284,14 +284,15 @@ function emitPhoto(dir, type, img) {
         captionText = img.replace(/.*\//, "");
         photo = `
             <div class="polaroid-frame">
-                <div class="polaroid-shadow">
+<div class="polaroid-shadow">
                     <div class="mat">
                        <a href="${imgSwipebox}" class="swipebox" title="${captionText}" >
                            <img class="photo" src="${imgThumbnail}"  />
                        </a>
                     </div>
                     <div class="polaroid-caption">${captionText}</div>
-                </div>
+</div>
+
             </div>
         `;
     } else {
