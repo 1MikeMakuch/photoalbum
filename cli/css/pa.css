@@ -83,6 +83,11 @@ a:-webkit-any-link {
     cursor               : pointer;
 }
 
+.photo {
+    display              : block;
+    height               : 140px;
+    width                : auto;
+}
 .photos {
     display              : inline-block;
     text-align           : center;
@@ -92,7 +97,7 @@ a:-webkit-any-link {
 .polaroid-caption {
     background-color     : white;
     color                : #d0d0d0;
-    display              : inline-block;
+    display              : block;
     font-size            : small;
     height               : auto;
     margin-top           : 0;
@@ -112,6 +117,10 @@ a:-webkit-any-link {
     margin               : 20px;
     vertical-align       : top;
     width                : auto;
+}
+.polaroid-buffer {
+    display: inline-block;
+    font-size: 0;
 }
 
 .resize-controls {
@@ -197,11 +206,6 @@ header {
     width                : 100%;
 }
 
-.photo {
-    display              : block;
-    height               : 140px;
-    width                : auto;
-}
 
 @media only screen and (max-width: 640px) {
     /* switch to block to force 1 per row, then we need shadow to be block too

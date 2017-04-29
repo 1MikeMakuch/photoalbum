@@ -229,17 +229,14 @@ function emitPhoto(dir, type, img) {
     // on mobile never DL the raw (big) image
     var mq = window.matchMedia("(max-width: 640px)");
     var swipeboxSize = "/raw/";
+    var thumbnailSize = "/1000/";
+
     if (mq.matches) {
         swipeboxSize = "/1000/";
+        thumbnailSize = "/640/";
     }
-    var imgThumbnail = String(config.assetsUrl + img).replace(
-        "/raw/",
-        "/1000/"
-    );
-    var imgSwipebox = String(config.assetsUrl + img).replace(
-        "/raw/",
-        swipeboxSize
-    );
+
+    var imgThumbnail;
 
     if ("album" == type) {
         path = (dir ? dir + "/" : "") + img["dir"];
@@ -247,7 +244,7 @@ function emitPhoto(dir, type, img) {
         onclick = ` onclick="photoalbum('${path}',0);" `;
         imgThumbnail = String(config.assetsUrl + img["image"]).replace(
             "/raw/",
-            "/1000/"
+            thumbnailSize
         );
         //        console.log("ith", imgThumbnail);
 
@@ -276,23 +273,26 @@ function emitPhoto(dir, type, img) {
             </div>
         `;
     } else if ("chapter" == type) {
-        // Polaroid
-
-        //        console.log("ith", imgThumbnail);
-
-        // For now just use file name w/out leading path
+        // Polaroid, for now just use file name w/out leading path
         captionText = img.replace(/.*\//, "");
+        var imgSwipebox = String(config.assetsUrl + img).replace(
+            "/raw/",
+            swipeboxSize
+        );
+        imgThumbnail = String(config.assetsUrl + img).replace(
+            "/raw/",
+            thumbnailSize
+        );
         photo = `
             <div class="polaroid-frame">
-<div class="polaroid-shadow">
+                <div class="polaroid-buffer">
                     <div class="mat">
                        <a href="${imgSwipebox}" class="swipebox" title="${captionText}" >
                            <img class="photo" src="${imgThumbnail}"  />
                        </a>
                     </div>
                     <div class="polaroid-caption">${captionText}</div>
-</div>
-
+                </div>
             </div>
         `;
     } else {
