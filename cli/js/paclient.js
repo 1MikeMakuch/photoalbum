@@ -73,6 +73,10 @@ var photoalbum = (function() {
             } else {
                 $(".photos").html(photos);
             }
+            if (0 === page) {
+                window.scrollTo(0, 0);
+            }
+
             resize.apply();
             if (result.results.length) {
                 bindScroll();
@@ -97,7 +101,16 @@ function bindScroll() {
     // Each time the user scrolls
     win.scroll(function() {
         // End of the document reached?
+
+        console.log(
+            "scroll",
+            $(document).height(),
+            win.height(),
+            win.scrollTop()
+        );
+
         if ($(document).height() - win.height() == win.scrollTop()) {
+            console.log("hit bottom!!!!!");
             unbindScroll();
             $("#loading").show();
             photoalbum();
@@ -209,7 +222,7 @@ function captionAlbum(img) {
 // emit markup for a single photo
 //
 function emitPhoto(dir, type, img) {
-    console.log("img", img);
+    //    console.log("img", img);
     var path = "";
     var captionText = "";
     var onclick = "";
@@ -238,6 +251,7 @@ function emitPhoto(dir, type, img) {
             "/raw/",
             "/1000/"
         );
+        //        console.log("ith", imgThumbnail);
 
         // Saving this in case I want to use it soon:
         //        <picture ${onclick} >
@@ -265,6 +279,8 @@ function emitPhoto(dir, type, img) {
         `;
     } else if ("chapter" == type) {
         // Polaroid
+
+        //        console.log("ith", imgThumbnail);
 
         // For now just use file name w/out leading path
         captionText = img.replace(/.*\//, "");
