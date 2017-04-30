@@ -202,13 +202,18 @@ function hasChapterSemaphore(dir) {
     var path = dir + "/raw";
     return pathExists(path);
 }
+function jpegs(file) {
+    return file.match(/jpg$/i);
+}
 
 function getThumb(dir) {
     var raw = dir + "/raw";
     //    console.log("getThumb", dir, raw);
+    var inRaw = false;
     return pathExists(raw)
         .then(function(rawExists) {
             if (rawExists) {
+                inRaw = true;
                 return raw;
             } else {
                 return dir;
@@ -222,6 +227,7 @@ function getThumb(dir) {
             if ([] == files) {
                 return [];
             }
+
             var i = 0;
 
             return (function nextFile() {
@@ -233,7 +239,7 @@ function getThumb(dir) {
                 file = dir + "/" + file;
 
                 return isDirectory(file).then(function(isDir) {
-                    if (isDir) {
+                    if (isDir && !inRaw) {
                         return getThumb(file);
                     } else {
                         if (file.match(/jpg$/i)) {
