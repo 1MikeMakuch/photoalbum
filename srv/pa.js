@@ -50,13 +50,13 @@ process.chdir(config.apiDocroot);
 app.set("query parser", true);
 
 app.get("/", function(req, res) {
+    console.log("Hello, world!");
     res.send("Hello, world!\n");
 });
 
 // Handle just /query/
 app.get("/query/", function(req, res) {
-    console.log(req.url);
-    console.log("query", req.query);
+    console.log("\n", req.url, req.query);
 
     return verifyDir(".", req.query)
         .then(function(vres) {
@@ -70,7 +70,8 @@ app.get("/query/", function(req, res) {
 
 // Handle arbitrary paths following /query/
 app.get(/^\/query\/((?:[^\/]+\/?)+)\/*/, function(req, res) {
-    console.log(req.url);
+    console.log("\n", req.url, req.query);
+
     var dir = req.params[0].split("/");
     dir = dir.join("/");
     dir = dir.replace(/\/$/, "");
@@ -80,7 +81,7 @@ app.get(/^\/query\/((?:[^\/]+\/?)+)\/*/, function(req, res) {
             return photoAlbum(dir, req.query["page"]);
         })
         .then(function(dirs) {
-            console.log(dirs);
+            console.log("\n", dirs);
             res.send(dirs);
         })
         .catch(function(e) {
@@ -125,11 +126,9 @@ function pathExists(path) {
     return fs
         .access(path)
         .then(function() {
-            //console.log('file exists:         ', path);
             return true;
         })
         .catch(function(e) {
-            //console.log('file does not exist: ', path);
             return false;
         });
 }
@@ -138,21 +137,18 @@ function readDir(path) {
     return fs
         .readdir(path)
         .then(function(files) {
-            //console.log('readdir files ', files);
             return files;
         })
         .catch(function(e) {
-            //console.log('readdir error', e);
+            console.log("readdir error", e);
             return [];
         });
 }
 
 function isDirectory(path) {
-    //console.log('isDirectory',path);
     return fs
         .stat(path)
         .then(function(stats) {
-            //console.log('isDirectory()',stats.isDirectory());
             return stats.isDirectory();
         })
         .catch(function(e) {
@@ -171,7 +167,7 @@ function verifyDir(dir, queryString) {
     if (path.includes("..")) {
         return Promise.reject(new Error("bad path"));
     }
-    console.log("verifyDir", queryString);
+
     if (
         !queryString ||
         ("page" in queryString && !isNumeric(queryString["page"]))
@@ -202,56 +198,53 @@ function hasChapterSemaphore(dir) {
     var path = dir + "/raw";
     return pathExists(path);
 }
-function jpegs(file) {
-    return file.match(/jpg$/i);
+
+function validImage(file) {
+    return file.match(/jpg$|gif$|bmp$|png$/i);
+}
+function getThumbFromRawDir(raw) {
+    // TODO need to optimize here instead of reading all files in dir should iterate 1 at a time
+    return readDir(raw).then(function(files) {
+        var l = files.length;
+        for (var i = 0; i < l; i++) {
+            if (validImage(files[i])) {
+                return raw + "/" + files[i];
+            }
+        }
+        return "";
+    });
+}
+
+function getThumbFromAlbumDir(dir) {
+    // dir should be an album dir containing other album/chapter dirs
+    // so we call getThumb on each dir till we find an image
+    return readDir(dir).then(function(files) {
+        var i = 0;
+        return (function nextFile() {
+            var file = files[i++];
+            file = dir + "/" + file;
+            return isDirectory(file).then(function(isDir) {
+                if (isDir) {
+                    return getThumb(file);
+                } else {
+                    return nextFile();
+                }
+            });
+        })();
+    });
 }
 
 function getThumb(dir) {
     var raw = dir + "/raw";
-    //    console.log("getThumb", dir, raw);
-    var inRaw = false;
-    return pathExists(raw)
-        .then(function(rawExists) {
-            if (rawExists) {
-                inRaw = true;
-                return raw;
-            } else {
-                return dir;
-            }
-        })
-        .then(function(subdir) {
-            dir = subdir;
-            return readDir(dir);
-        })
-        .then(function(files) {
-            if ([] == files) {
-                return [];
-            }
-
-            var i = 0;
-
-            return (function nextFile() {
-                var file = files[i++];
-
-                if (!file) {
-                    return "";
-                }
-                file = dir + "/" + file;
-
-                return isDirectory(file).then(function(isDir) {
-                    if (isDir && !inRaw) {
-                        return getThumb(file);
-                    } else {
-                        if (file.match(/jpg$/i)) {
-                            return file;
-                        } else {
-                            return nextFile();
-                        }
-                    }
-                });
-            })();
-        });
+    return pathExists(raw).then(function(rawExists) {
+        if (rawExists) {
+            return getThumbFromRawDir(raw);
+        } else {
+            return getThumbFromAlbumDir(dir);
+        }
+    });
 }
+
 function getPics(dir, page) {
     dir += "/raw";
     return readDir(dir)
@@ -261,7 +254,7 @@ function getPics(dir, page) {
         .then(function(pics) {
             paths = [];
             pics.forEach(function(file) {
-                if (file.match(/jpg$/i)) {
+                if (validImage(file)) {
                     paths.push({ image: dir + "/" + file });
                 }
             });
@@ -273,12 +266,8 @@ function getPics(dir, page) {
 }
 
 function getDirs(dir) {
-    console.log("getDirs0", dir);
-
     function checkAlbumOrChapter(path) {
-        //console.log('checkAlbumOrChapter',path);
         return isDirectory(path).then(function(isDir) {
-            //console.log('isDir:',path, isDir);
             if (!isDir) {
                 return false;
             } else {
@@ -286,8 +275,6 @@ function getDirs(dir) {
                 semaphores.push(hasChapterSemaphore(path));
                 semaphores.push(hasAlbumSemaphore(path));
                 return Promise.all(semaphores).then(function(result) {
-                    //console.log('semaphores',semaphores);
-                    //console.log('result',result);
                     return result;
                 });
             }
@@ -301,6 +288,7 @@ function getDirs(dir) {
         files.forEach(function(file) {
             list.push(checkAlbumOrChapter(dir + "/" + file));
         });
+
         var dirList = [];
         return Promise.all(list)
             .then(function(results) {
@@ -309,6 +297,7 @@ function getDirs(dir) {
                         dirList.push(files[i]);
                     }
                 }
+
                 return dirList.sort(function(a, b) {
                     return b - a;
                 });
@@ -343,7 +332,6 @@ function pageSelector(list, page) {
 }
 
 function getDirsAndThumbs(dir, page) {
-    console.log("getDirsAndThumbs", dir);
     return getDirs(dir)
         .then(function(dirs) {
             return dirs.sort(dirSort);
@@ -360,7 +348,6 @@ function getDirsAndThumbs(dir, page) {
                     promises.push(getThumb(subdir));
                 }
             });
-
             return Promise.all(promises).then(function(thumbs) {
                 var results = [];
                 for (var i = 0; i < dirs.length; i++) {
@@ -372,11 +359,7 @@ function getDirsAndThumbs(dir, page) {
 }
 
 function photoAlbum(dir, page) {
-    console.log("dirList", dir);
-    console.log("cwd", process.cwd());
-
-    //    dir = /* docRoot +*/ ('' != dir ? '/' + dir : '');
-    console.log("dirList", dir);
+    console.log("photoAlbum", dir, page, process.cwd());
 
     var isAlbum;
     var isChapter;
@@ -388,7 +371,6 @@ function photoAlbum(dir, page) {
     return Promise.all(semaphores).then(function(results) {
         isAlbum = results[0];
         isChapter = results[1];
-        console.log("semaphores", results);
 
         if (isAlbum) {
             return getDirsAndThumbs(dir, page).then(function(results) {
