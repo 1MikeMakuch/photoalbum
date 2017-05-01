@@ -5,7 +5,7 @@
   "main": "pa.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel cli/js -d lib"
+    "build": "babel src/cli/es2015 -d cli/js"
   },
   "author": "",
   "license": "ISC",
