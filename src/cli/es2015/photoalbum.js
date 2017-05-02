@@ -1,7 +1,7 @@
 //  How this works
 //
-//  Query api for dirs in root
-//  Response contains list of dirs and a an image to use for thumbnail
+//  Query api for dirs in the root photoalbum dir
+//  Response contains list of dirs and and an image to use for thumbnail
 //  Each element represents an Album containing either more Albums or
 //   just images if a Chapter. Click on an Album to drill in. Use
 //   breadcrumbs to back up.
