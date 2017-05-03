@@ -34,7 +34,7 @@ var cors = require("cors");
 var sleep = require("sleep");
 var querystring = require("querystring");
 
-var config = require("../config");
+var config = require("../../config");
 
 console.log("config", config);
 

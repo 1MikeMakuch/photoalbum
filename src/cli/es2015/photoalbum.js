@@ -76,6 +76,9 @@ var photoalbum = (function() {
             } else {
                 $(".photos").html(photos);
             }
+
+            swipeboxInit();
+
             if (0 === page) {
                 window.scrollTo(0, 0);
             }

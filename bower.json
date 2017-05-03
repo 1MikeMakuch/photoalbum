@@ -1,0 +1,23 @@
+{
+  "name": "photoalbum",
+  "description": "photo album",
+  "main": "srv/photoalbumServer.js",
+  "authors": [
+    "Mike Makuch <1mikemakuch@gmail.com>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/1mikemakuch/photoalbum",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "swipebox": "^1.4.4",
+    "spin": "^1.1.6",
+    "jquery": "^3.2.1"
+  }
+}

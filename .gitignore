@@ -10,3 +10,5 @@ all.js
 albums
 node_modules
 npm-debug.log
+bower_components
+dist

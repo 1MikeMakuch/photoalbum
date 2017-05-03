@@ -6,10 +6,10 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Mike's Photoalbum</title>
-        <script type="text/javascript" src="js/photoalbum.js"></script>
-        <link rel="stylesheet" type="text/css" href="css/photoalbum.css">
+        <!-- injector:css -->
+        <!-- endinjector -->
     </head>
-    <body background="/book_bg2.jpg">
+    <body background="img/book_bg2.jpg">
 
         <header>
             <div class="title">Mike's Photo Album</div>
@@ -29,6 +29,13 @@
         <div class="photos"></div>
 
         <div id="loading">Loading...</div>
+
+        <!-- injector:js -->
+        <!-- endinjector -->
+
+
+
+
 
     </body>
 </html>
