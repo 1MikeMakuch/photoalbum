@@ -203,11 +203,14 @@ function validImage(file) {
     return file.match(/jpg$|gif$|bmp$|png$/i);
 }
 function getThumbFromRawDir(raw) {
+    //    console.log("getThumbFromRawDir", raw);
     // TODO need to optimize here instead of reading all files in dir should iterate 1 at a time
     return readDir(raw).then(function(files) {
         var l = files.length;
         for (var i = 0; i < l; i++) {
             if (validImage(files[i])) {
+                //                console.log(" getThumbFromRawDir", raw + "/" + files[i]);
+
                 return raw + "/" + files[i];
             }
         }
@@ -216,16 +219,27 @@ function getThumbFromRawDir(raw) {
 }
 
 function getThumbFromAlbumDir(dir) {
+    //    console.log("getThumbFromAlbumDir", dir);
     // dir should be an album dir containing other album/chapter dirs
     // so we call getThumb on each dir till we find an image
     return readDir(dir).then(function(files) {
         var i = 0;
         return (function nextFile() {
+            if (i >= files.length) {
+                return "";
+            }
             var file = files[i++];
             file = dir + "/" + file;
+            //            console.log("getThumbFromAlbumDir.nextFile", file);
             return isDirectory(file).then(function(isDir) {
                 if (isDir) {
-                    return getThumb(file);
+                    return getThumb(file).then(function(file) {
+                        if (file) {
+                            return file;
+                        } else {
+                            return nextFile();
+                        }
+                    });
                 } else {
                     return nextFile();
                 }
@@ -235,13 +249,21 @@ function getThumbFromAlbumDir(dir) {
 }
 
 function getThumb(dir) {
-    var raw = dir + "/raw";
-    return pathExists(raw).then(function(rawExists) {
-        if (rawExists) {
-            return getThumbFromRawDir(raw);
-        } else {
+    //    console.log("getThumb", dir);
+    var semaphores = [];
+    semaphores.push(hasAlbumSemaphore(dir));
+    semaphores.push(hasChapterSemaphore(dir));
+
+    return Promise.all(semaphores).then(function(results) {
+        //        console.log("getThumb.all.results", results);
+        var isAlbum = results[0];
+        var isChapter = results[1];
+        if (isAlbum) {
             return getThumbFromAlbumDir(dir);
+        } else if (isChapter) {
+            return getThumbFromRawDir(dir + "/raw");
         }
+        return "";
     });
 }
 
@@ -331,6 +353,7 @@ function pageSelector(list, page) {
     return list.splice(page * config.pageSize, config.pageSize);
 }
 
+// TODO this logic sucks, not DRY!
 function getDirsAndThumbs(dir, page) {
     return getDirs(dir)
         .then(function(dirs) {
@@ -340,6 +363,7 @@ function getDirsAndThumbs(dir, page) {
             return pageSelector(dirs, page);
         })
         .then(function(dirs) {
+            //            console.log("getDirsAndThumbs.then", dirs);
             var promises = [];
             dirs.forEach(function(subdir) {
                 if (dir && "." != dir) {
@@ -349,6 +373,7 @@ function getDirsAndThumbs(dir, page) {
                 }
             });
             return Promise.all(promises).then(function(thumbs) {
+                //                console.log("getDirsAndThumbs Promises.all", thumbs);
                 var results = [];
                 for (var i = 0; i < dirs.length; i++) {
                     results.push({ dir: dirs[i], image: thumbs[i] });
@@ -374,11 +399,12 @@ function photoAlbum(dir, page) {
 
         if (isAlbum) {
             return getDirsAndThumbs(dir, page).then(function(results) {
-                //console.log('getDirs.then',results);
+                //                console.log("getDirs.then", results);
                 return { type: "album", results: results };
             });
         } else if (isChapter) {
             return getPics(dir, page).then(function(pics) {
+                //                console.log("getPics.then", pics);
                 return { type: "chapter", results: pics };
             });
         } else {
