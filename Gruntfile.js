@@ -28,7 +28,7 @@ module.exports = function(grunt) {
 
     var paSrcFiles = [
         "dist/cli/js/spin.js",
-        "dist/cli/js/config.js",
+        "dist/cli/js/uiconfig.js",
         "dist/cli/js/photoalbum.js"
     ];
 
@@ -57,14 +57,14 @@ module.exports = function(grunt) {
             }
         },
 
-        shell: {
-            options: {
-                stderr: false
-            },
-            target: {
-                command: "rm ../../../albums dist/cli/albums ; ln -s ../../../albums dist/cli/albums"
-            }
-        },
+        //        shell: {
+        //            options: {
+        //                stderr: false
+        //            },
+        //            target: {
+        //                command: "rm ../../../albums dist/cli/albums ; ln -s ../../../albums dist/cli/albums"
+        //            }
+        //        },
         babel: {
             options: {
                 sourceMap: true,
@@ -88,6 +88,10 @@ module.exports = function(grunt) {
             main: {
                 files: [
                     {
+                        src: "config/uiconfig.js",
+                        dest: "dist/cli/js/uiconfig.js"
+                    },
+                    {
                         src: "src/cli/js/jquery.swipebox.js",
                         dest: "bower_components/swipebox/src/js/jquery.swipebox.js"
                     },
@@ -95,7 +99,6 @@ module.exports = function(grunt) {
                         src: "bower_components/**",
                         dest: "dist/cli/"
                     },
-
                     {
                         expand: true,
                         cwd: "src/cli/js/",
@@ -103,6 +106,10 @@ module.exports = function(grunt) {
                         filter: "isFile",
                         src: "*",
                         dest: "dist/cli/js/"
+                    },
+                    {
+                        src: "src/srv/photoalbum.js",
+                        dest: "dist/srv/photoalbum.js"
                     },
                     {
                         src: "src/cli/css/photoalbum.css",
