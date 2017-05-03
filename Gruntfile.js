@@ -90,9 +90,14 @@ module.exports = function(grunt) {
             main: {
                 files: [
                     {
+                        src: "src/cli/js/jquery.swipebox.js",
+                        dest: "bower_components/swipebox/src/js/jquery.swipebox.js"
+                    },
+                    {
                         src: "bower_components/**",
                         dest: "dist/cli/"
                     },
+
                     {
                         expand: true,
                         cwd: "src/cli/js/",
