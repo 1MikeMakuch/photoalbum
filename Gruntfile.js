@@ -57,14 +57,14 @@ module.exports = function(grunt) {
             }
         },
 
-        //        shell: {
-        //            options: {
-        //                stderr: false
-        //            },
-        //            target: {
-        //                command: "rm ../../../albums dist/cli/albums ; ln -s ../../../albums dist/cli/albums"
-        //            }
-        //        },
+        shell: {
+            options: {
+                stderr: false
+            },
+            target: {
+                command: "rm ../../../albums dist/cli/albums ; ln -s ../../../albums dist/cli/albums"
+            }
+        },
         babel: {
             options: {
                 sourceMap: true,
@@ -154,7 +154,7 @@ module.exports = function(grunt) {
         grunt.task.run("babel");
         grunt.task.run("copy");
         grunt.task.run("injector:dev");
-        grunt.task.run("shell");
+        //        grunt.task.run("shell");
     }
 
     // Concat all pa js file, uglify it, then concat thirdparty and pa into single file.
