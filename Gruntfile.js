@@ -22,8 +22,6 @@ module.exports = function(grunt) {
         "dist/cli/bower_components/jquery/dist/jquery.min.map",
         "dist/cli/bower_components/swipebox/src/js/jquery.swipebox.js",
         "dist/cli/bower_components/swipebox/lib/ios-orientationchange-fix.js",
-        "dist/cli/bower_components/spin/stylesheets/jquery.spin.css",
-        "dist/cli/bower_components/spin/javascripts/jquery.spin.js",
         "dist/cli/css/photoalbum.css",
         "dist/cli/bower_components/swipebox/src/css/swipebox.css"
     ];
