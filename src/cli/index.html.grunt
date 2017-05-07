@@ -26,6 +26,8 @@
             </div>
         </header>
 
+        <div class="summary"></div>
+
         <div class="photos"></div>
 
         <div id="loading">Loading...</div>

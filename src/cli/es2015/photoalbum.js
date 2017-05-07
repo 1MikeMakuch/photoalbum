@@ -61,6 +61,9 @@ var photoalbum = (function() {
                 $('#loading').hide()
                 unbindScroll()
             }
+            if (result.summary) {
+                $('.summary').html(result.summary)
+            }
 
             var photos = ''
 
