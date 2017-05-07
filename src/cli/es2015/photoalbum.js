@@ -18,109 +18,109 @@
 
 var photoalbum = (function() {
     // Just a little private data
-    var DIR = "";
-    var page = -1;
-    var lastdir = "";
+    var DIR = ''
+    var page = -1
+    var lastdir = ''
 
     return function(dir) {
         if (undefined === dir) {
-            dir = DIR;
+            dir = DIR
         } else {
-            DIR = dir;
+            DIR = dir
         }
-        $("#breadcrumbs").html(createBreadcrumbs(dir));
+        $('#breadcrumbs').html(createBreadcrumbs(dir))
 
         if (dir == lastdir) {
-            page++;
+            page++
         } else {
-            page = 0;
+            page = 0
         }
-        lastdir = dir;
+        lastdir = dir
 
         if (!page) {
-            page = 0;
+            page = 0
         }
         if (!page) {
-            bindScroll();
+            bindScroll()
         }
 
-        var query = config.apiServer + "/query/" + dir + `?page=${page}`;
+        var query = config.apiServer + '/query/' + dir + `?page=${page}`
 
-        spinner("busy");
+        spinner('busy')
 
         $.ajax({
             url: query,
-            success: handleApiResponse
-        });
+            success: handleApiResponse,
+        })
 
         function handleApiResponse(result) {
-            console.log("result", result);
-            var mediaQuery = window.matchMedia("(max-width: 640px)");
+            console.log('result', result)
+            var mediaQuery = window.matchMedia('(max-width: 640px)')
 
             if (!result.results.length) {
-                $("#loading").hide();
-                unbindScroll();
+                $('#loading').hide()
+                unbindScroll()
             }
 
-            var photos = "";
+            var photos = ''
 
             result.results
                 .sort(function(a, b) {
-                    return photoAlbumSort(result.type, a, b);
+                    return photoAlbumSort(result.type, a, b)
                 })
                 .forEach(function(img) {
-                    photos += emitPhoto(dir, result.type, img, mediaQuery);
-                });
+                    photos += emitPhoto(dir, result.type, img, mediaQuery)
+                })
             if (page) {
-                $(".photos").append(photos);
+                $('.photos').append(photos)
             } else {
-                $(".photos").html(photos);
+                $('.photos').html(photos)
             }
 
-            swipeboxInit();
+            swipeboxInit()
 
             if (0 === page) {
-                window.scrollTo(0, 0);
+                window.scrollTo(0, 0)
             }
 
-            resize.apply();
+            resize.apply()
             if (result.results.length) {
-                bindScroll();
+                bindScroll()
             }
         }
-    };
-})();
+    }
+})()
 
 ////////////////////////////////////////////
 // Infinite scroll
 ////////////////////////////////////////////
 
 function unbindScroll() {
-    $(window).unbind("scroll");
+    $(window).unbind('scroll')
 }
 
 function bindScroll() {
-    unbindScroll();
-    var win = $(window);
-    $("#loading").hide();
+    unbindScroll()
+    var win = $(window)
+    $('#loading').hide()
 
     // Each time the user scrolls
     win.scroll(function() {
         // End of the document reached?
 
-        var top = $(window).scrollTop() || $("body").scrollTop();
-        var diff = $(document).height() - win.height();
+        var top = $(window).scrollTop() || $('body').scrollTop()
+        var diff = $(document).height() - win.height()
 
         //      console.log( "scroll", $(document).height(), win.height(), diff, top, top+100);
         // not sure why have to add 100 to top but otherwise it sometimes never hits bottom
         if ($(document).height() - win.height() <= top + 100) {
-            console.log("hit bottom!!!!!");
-            unbindScroll();
-            $("#loading").show();
-            photoalbum();
-            $("#loading").hide();
+            console.log('hit bottom!!!!!')
+            unbindScroll()
+            $('#loading').show()
+            photoalbum()
+            $('#loading').hide()
         }
-    });
+    })
 }
 
 ////////////////////////////////////////////
@@ -128,47 +128,47 @@ function bindScroll() {
 ////////////////////////////////////////////
 
 var spinner = (function() {
-    var opts = { radius: 100, length: 50 };
-    var spinner = new Spinner(opts);
+    var opts = {radius: 100, length: 50}
+    var spinner = new Spinner(opts)
     return function(state) {
-        if ("busy" == state) {
-            spinner.spin();
-            $("body").append(spinner.el);
-            $(".spinner").css({ position: "fixed" });
+        if ('busy' == state) {
+            spinner.spin()
+            $('body').append(spinner.el)
+            $('.spinner').css({position: 'fixed'})
         } else {
             // 'unbusy' == state
             setTimeout(function() {
                 if (spinner) {
-                    spinner.stop();
+                    spinner.stop()
                 }
-            }, 500);
+            }, 500)
         }
-    };
-})();
+    }
+})()
 
 /////////////////////////////////////////////
 // breadcrumbs
 /////////////////////////////////////////////
 
 function createBreadcrumbs(arg) {
-    var dirs = arg.split("/");
-    var breadcrumbs = `<a class="breadcrumbs" href="#" onclick="photoalbum('',0);">HOME</a>`;
+    var dirs = arg.split('/')
+    var breadcrumbs = `<a class="breadcrumbs" href="#" onclick="photoalbum('',0);">HOME</a>`
     if (!arg) {
-        return breadcrumbs;
+        return breadcrumbs
     }
-    var link = "";
+    var link = ''
     dirs.forEach(function(dir) {
-        link += (link ? "/" : "") + dir;
+        link += (link ? '/' : '') + dir
         breadcrumbs +=
-            (breadcrumbs ? " / " : "") +
-            `<a href="#" onclick="photoalbum('${link}',0);">${dir}</a>`;
-    });
+            (breadcrumbs ? ' / ' : '') +
+            `<a href="#" onclick="photoalbum('${link}',0);">${dir}</a>`
+    })
 
-    return breadcrumbs;
+    return breadcrumbs
 }
 
 function isNumeric(n) {
-    return !isNaN(parseFloat(n)) && isFinite(n);
+    return !isNaN(parseFloat(n)) && isFinite(n)
 }
 ///////////////////////////////////////////////////////////////////////////
 // Rather complicated sorting algo, but this is how I want it:
@@ -177,101 +177,213 @@ function isNumeric(n) {
 ///////////////////////////////////////////////////////////////////////////
 
 function photoAlbumSort(type, namea, nameb) {
-    var a = namea["dir"];
-    var b = nameb["dir"];
+    var a = namea['dir']
+    var b = nameb['dir']
 
-    if ("album" == type) {
-        var r;
+    if ('album' == type) {
+        var r
         if (isNumeric(a.substring(0, 1)) && isNumeric(b.substring(0, 1))) {
-            r = a < b ? 1 : -1;
+            r = a < b ? 1 : -1
         } else if (
             isNumeric(a.substring(0, 1)) && !isNumeric(b.substring(0, 1))
         ) {
-            r = -1;
+            r = -1
         } else if (
             !isNumeric(a.substring(0, 1)) && isNumeric(b.substring(0, 1))
         ) {
-            r = 1;
+            r = 1
         } else {
-            r = a.toLowerCase() > b.toLowerCase() ? 1 : -1;
+            r = a.toLowerCase() > b.toLowerCase() ? 1 : -1
         }
-        return r;
-    } else if ("chapter" == type) {
-        var imga = namea["image"].replace(/.*\//, "");
-        var imgb = nameb["image"].replace(/.*\//, "");
-        return imga.toLowerCase() > imgb.toLowerCase() ? 1 : -1;
+        return r
+    } else if ('chapter' == type) {
+        var imga = namea['image'].replace(/.*\//, '')
+        var imgb = nameb['image'].replace(/.*\//, '')
+        return imga.toLowerCase() > imgb.toLowerCase() ? 1 : -1
     }
 
-    return 0;
+    return 0
 }
 
 //
 // Derive a legible caption from album dir name
 //
 function captionAlbum(img) {
-    var desc = img;
+    var desc = img
     if (img.match(/[0-9]{8}-.*/)) {
         desc =
             img.substring(0, 4) +
-            "/" +
+            '/' +
             img.substring(4, 6) +
-            "/" +
-            img.substring(6, 8);
-        desc += " " + img.substring(9);
+            '/' +
+            img.substring(6, 8)
+        desc += ' ' + img.substring(9)
     }
-    return desc;
+    return desc
 }
 
 //
 // emit markup for a single photo
 //
 function emitPhoto(dir, type, img, mediaQuery) {
-    var path = "";
-    var captionText = "";
-    var onclick = "";
-    var photo = "";
+    var path = ''
+    var captionText = ''
+    var onclick = ''
+    var photo = ''
 
     // desktop: thumb 1000, swipe raw
     // mobile: thumb 640,   swipe 1000
 
-    const sizeThumbnailMobile = "/640/";
-    const sizeThumbnailDesktop = "/1000/";
-    const sizeSwipeboxMobile = "/1000/";
-    const sizeSwipeboxDesktop = "/raw/";
+    const sizeThumbnailMobile = '/640/'
+    const sizeThumbnailDesktop = '/1000/'
+    const sizeSwipeboxMobile = '/1000/'
+    const sizeSwipeboxDesktop = '/raw/'
 
-    var imgDir = img["dir"] || "";
-    var imgPath = img["image"] || "";
+    var imgDir = img['dir'] || ''
+    var imgPath = img['image'] || ''
 
-    var imgThumbnailMobile = String(config.assetsUrl + imgPath).replace(
-        "/raw/",
-        sizeThumbnailMobile
-    );
-    var imgThumbnailDesktop = String(config.assetsUrl + imgPath).replace(
-        "/raw/",
-        sizeThumbnailDesktop
-    );
-    var imgSwipeboxMobile = String(config.assetsUrl + imgPath).replace(
-        "/raw/",
-        sizeSwipeboxMobile
-    );
-    var imgSwipeboxDesktop = String(config.assetsUrl + imgPath).replace(
-        "/raw/",
-        sizeSwipeboxDesktop
-    );
-
-    var imgSwipebox, imgThumbnail;
-    if (mediaQuery.matches) {
-        imgSwipebox = imgSwipeboxMobile;
-        imgThumbnail = imgThumbnailMobile;
-    } else {
-        imgSwipebox = imgSwipeboxDesktop;
-        imgThumbnail = imgThumbnailDesktop;
+    // console.log("imgPath", imgPath);
+    if (!imgPath) {
+        return ''
     }
 
-    if ("album" == type) {
-        path = (dir ? dir + "/" : "") + imgDir;
-        captionText = captionAlbum(imgDir);
-        onclick = ` onclick="photoalbum('${path}',0);" `;
+    var imgThumbnailMobile = String(config.assetsUrl + imgPath).replace(
+        '/raw/',
+        sizeThumbnailMobile
+    )
+    var imgThumbnailDesktop = String(config.assetsUrl + imgPath).replace(
+        '/raw/',
+        sizeThumbnailDesktop
+    )
+    var imgSwipeboxMobile = String(config.assetsUrl + imgPath).replace(
+        '/raw/',
+        sizeSwipeboxMobile
+    )
+    var imgSwipeboxDesktop = String(config.assetsUrl + imgPath).replace(
+        '/raw/',
+        sizeSwipeboxDesktop
+    )
+
+    var imgSwipebox, imgThumbnail
+    if (mediaQuery.matches) {
+        imgSwipebox = imgSwipeboxMobile
+        imgThumbnail = imgThumbnailMobile
+    } else {
+        imgSwipebox = imgSwipeboxDesktop
+        imgThumbnail = imgThumbnailDesktop
+    }
+
+    var bufferClass = ''
+    var buttonClass = ''
+    var captionClass = ''
+    var frameClass = ''
+    var onclick = ''
+    var shadowClass = ''
+    var swipeboxClose = ''
+    var swipeboxElement = ''
+
+    if ('album' == type) {
+        buttonClass = 'mat matbutton'
+        captionClass = 'album-caption'
+        captionText = captionAlbum(imgDir)
+        frameClass = 'album-frame'
+        shadowClass = 'album-shadow'
+
+        path = (dir ? dir + '/' : '') + imgDir
+        onclick = ` onclick="photoalbum('${path}',0);" `
+    } else if ('chapter' == type) {
+        bufferClass = 'polaroid-buffer'
+        buttonClass = 'mat'
+        captionClass = 'polaroid-caption'
+        captionText = imgPath.replace(/.*\//, '')
+        frameClass = 'polaroid-frame'
+        shadowClass = 'polaroid-shadow'
+        swipeboxClose = '</a>'
+    }
+
+    if (img.txt) {
+        captionText = img.txt
+        captionClass += ' caption-bold '
+    }
+
+    if ('chapter' == type) {
+        swipeboxElement = `<a href="${imgSwipebox}" class="swipebox" title="${captionText}">`
+    }
+
+    photo = `
+            <div class="${frameClass}">
+                <div class="${bufferClass}">
+                    <div class="${buttonClass}">
+                        ${swipeboxElement}
+                            <img ${onclick} class="photo" src="${imgThumbnail}" />
+                        ${swipeboxClose}
+                    </div>
+                    <div class="${captionClass}">${captionText}</div>
+                </div>
+            </div>
+        `
+
+    return photo
+}
+
+function xemitPhoto(dir, type, img, mediaQuery) {
+    var path = ''
+    var captionText = ''
+    var onclick = ''
+    var photo = ''
+
+    // desktop: thumb 1000, swipe raw
+    // mobile: thumb 640,   swipe 1000
+
+    const sizeThumbnailMobile = '/640/'
+    const sizeThumbnailDesktop = '/1000/'
+    const sizeSwipeboxMobile = '/1000/'
+    const sizeSwipeboxDesktop = '/raw/'
+
+    var imgDir = img['dir'] || ''
+    var imgPath = img['image'] || ''
+
+    // console.log("imgPath", imgPath);
+    if (!imgPath) {
+        return ''
+    }
+
+    var imgThumbnailMobile = String(config.assetsUrl + imgPath).replace(
+        '/raw/',
+        sizeThumbnailMobile
+    )
+    var imgThumbnailDesktop = String(config.assetsUrl + imgPath).replace(
+        '/raw/',
+        sizeThumbnailDesktop
+    )
+    var imgSwipeboxMobile = String(config.assetsUrl + imgPath).replace(
+        '/raw/',
+        sizeSwipeboxMobile
+    )
+    var imgSwipeboxDesktop = String(config.assetsUrl + imgPath).replace(
+        '/raw/',
+        sizeSwipeboxDesktop
+    )
+
+    var imgSwipebox, imgThumbnail
+    if (mediaQuery.matches) {
+        imgSwipebox = imgSwipeboxMobile
+        imgThumbnail = imgThumbnailMobile
+    } else {
+        imgSwipebox = imgSwipeboxDesktop
+        imgThumbnail = imgThumbnailDesktop
+    }
+
+    if ('album' == type) {
+        path = (dir ? dir + '/' : '') + imgDir
+        captionText = captionAlbum(imgDir)
+        onclick = ` onclick="photoalbum('${path}',0);" `
+
+        var captionClass = 'polaroid-caption'
+
+        if (img.txt) {
+            captionText = img.txt
+        }
 
         photo = `
             <div class="album-frame">
@@ -282,10 +394,17 @@ function emitPhoto(dir, type, img, mediaQuery) {
                     <div class="album-caption">${captionText}</div>
                 </div>
             </div>
-        `;
-    } else if ("chapter" == type) {
+        `
+    } else if ('chapter' == type) {
         // Polaroid, for now just use file name w/out leading path
-        captionText = imgPath.replace(/.*\//, "");
+        var imgId = imgPath.replace(/.*\//, '')
+        captionText = imgId
+        var captionClass = 'polaroid-caption'
+
+        if (img.txt) {
+            captionText = img.txt
+            captionClass += ' polaroid-bold '
+        }
 
         photo = `
             <div class="polaroid-frame">
@@ -295,16 +414,16 @@ function emitPhoto(dir, type, img, mediaQuery) {
                           <img ${onclick} class="photo" src="${imgThumbnail}" />
                       </a>
                     </div>
-                    <div class="polaroid-caption">${captionText}</div>
+                    <div class="${captionClass}">${captionText}</div>
                 </div>
             </div>
-        `;
+        `
     } else {
-        console.log("epic fail");
-        alert("epic fail");
+        console.log('epic fail')
+        alert('epic fail')
     }
 
-    return photo;
+    return photo
 }
 
 ///////////////////////////////////////////////
@@ -314,106 +433,106 @@ function emitPhoto(dir, type, img, mediaQuery) {
 var resize = (function() {
     // 100, 200, 400, 800
 
-    const maxHeight = 800;
-    const minHeight = 100;
-    var height = 200;
-    var mq = window.matchMedia("(max-width: 640px)");
+    const maxHeight = 800
+    const minHeight = 100
+    var height = 200
+    var mq = window.matchMedia('(max-width: 640px)')
 
     function apply() {
         if (mq.matches) {
             // don't resize mobile
-            spinner("unbusy");
-            return;
+            spinner('unbusy')
+            return
         }
 
-        height = Number(height).toFixed(0);
-        console.log("resize", height);
+        height = Number(height).toFixed(0)
+        console.log('resize', height)
 
         // Kill the spinner after jquery is done
-        var dfd = $.Deferred();
+        var dfd = $.Deferred()
         dfd.done(() => {
-            $(".photo").height(height);
-        });
+            $('.photo').height(height)
+        })
         dfd.done(function() {
-            spinner("unbusy");
-        });
-        dfd.resolve();
+            spinner('unbusy')
+        })
+        dfd.resolve()
     }
     function enlargeEnable() {
-        $(".resize-enlarge").prop("disabled", false);
-        $(".resize-enlarge").css({
-            "border-bottom": "10px solid black"
-        });
+        $('.resize-enlarge').prop('disabled', false)
+        $('.resize-enlarge').css({
+            'border-bottom': '10px solid black',
+        })
     }
     function enlargeDisable() {
-        $(".resize-enlarge").prop("disabled", true);
-        $(".resize-enlarge").css({
-            "border-bottom": "10px solid gray"
-        });
+        $('.resize-enlarge').prop('disabled', true)
+        $('.resize-enlarge').css({
+            'border-bottom': '10px solid gray',
+        })
     }
     function reduceDisable() {
-        $(".resize-reduce").prop("disabled", true);
-        $(".resize-reduce").css({
-            "border-top": "10px solid gray"
-        });
+        $('.resize-reduce').prop('disabled', true)
+        $('.resize-reduce').css({
+            'border-top': '10px solid gray',
+        })
     }
     function reduceEnable() {
-        $(".resize-reduce").prop("disabled", false);
-        $(".resize-reduce").css({
-            "border-top": "10px solid black"
-        });
+        $('.resize-reduce').prop('disabled', false)
+        $('.resize-reduce').css({
+            'border-top': '10px solid black',
+        })
     }
 
     // enlarge & reduce are called by the buttons
     return {
         apply: function() {
-            apply();
+            apply()
         },
         enlarge: function() {
-            console.log("enlarge");
-            var save = height;
-            var pct = 2;
-            height *= pct;
+            console.log('enlarge')
+            var save = height
+            var pct = 2
+            height *= pct
             if (height >= maxHeight) {
-                height = maxHeight;
-                enlargeDisable();
+                height = maxHeight
+                enlargeDisable()
             } else {
-                enlargeEnable();
+                enlargeEnable()
             }
             if (save != height) {
-                spinner("busy");
-                apply();
+                spinner('busy')
+                apply()
             }
-            reduceEnable();
+            reduceEnable()
         },
         reduce: function() {
-            console.log("reduce");
-            var save = height;
-            var pct = 0.5;
-            height *= pct;
+            console.log('reduce')
+            var save = height
+            var pct = 0.5
+            height *= pct
             if (height <= minHeight) {
-                height = minHeight;
-                reduceDisable();
+                height = minHeight
+                reduceDisable()
             } else {
-                reduceEnable();
+                reduceEnable()
             }
             if (save != height) {
-                spinner("busy");
-                apply();
+                spinner('busy')
+                apply()
             }
-            enlargeEnable();
-        }
-    };
-})();
+            enlargeEnable()
+        },
+    }
+})()
 
 function swipeboxInit() {
-    (function($) {
-        $(".swipebox").swipebox();
-    })(jQuery);
+    ;(function($) {
+        $('.swipebox').swipebox()
+    })(jQuery)
 }
 
 $(document).ready(function() {
-    photoalbum();
+    photoalbum()
     //    var html = "";
     //    html += "screen.availLeft " + screen.availLeft + "\n";
     //    html += "screen.availTop " + screen.availTop + "\n";
@@ -430,5 +549,5 @@ $(document).ready(function() {
 
     //   console.log(html);
     //    $(".photos").html(html);
-    swipeboxInit();
-});
+    swipeboxInit()
+})

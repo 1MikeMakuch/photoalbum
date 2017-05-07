@@ -101,6 +101,9 @@ a:-webkit-any-link {
     text-align           : center;
     width                : 100%;
 }
+.caption-bold {
+    color : black;
+}
 
 .polaroid-frame {
     background-color     : white;

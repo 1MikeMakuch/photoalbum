@@ -144,6 +144,17 @@ function readDir(path) {
             return [];
         });
 }
+function readFile(path) {
+    return fs
+        .readFile(path, "utf8")
+        .then(function(file) {
+            return file;
+        })
+        .catch(function(err) {
+            //            console.log(err);
+            throw err;
+        });
+}
 
 function isDirectory(path) {
     return fs
@@ -152,7 +163,7 @@ function isDirectory(path) {
             return stats.isDirectory();
         })
         .catch(function(e) {
-            //console.log('isDirectory()',e);
+            console.log("isDirectory()", e);
             return false;
         });
 }
@@ -180,7 +191,7 @@ function verifyDir(dir, queryString) {
             return result;
         })
         .catch(function(e) {
-            //console.log(e);
+            console.log(e);
         });
 
     // will never get here
@@ -203,14 +214,13 @@ function validImage(file) {
     return file.match(/jpg$|gif$|bmp$|png$/i);
 }
 function getThumbFromRawDir(raw) {
-    //    console.log("getThumbFromRawDir", raw);
+    console.log("getThumbFromRawDir", raw);
     // TODO need to optimize here instead of reading all files in dir should iterate 1 at a time
     return readDir(raw).then(function(files) {
         var l = files.length;
         for (var i = 0; i < l; i++) {
             if (validImage(files[i])) {
-                //                console.log(" getThumbFromRawDir", raw + "/" + files[i]);
-
+                console.log(" getThumbFromRawDir", raw + "/" + files[i]);
                 return raw + "/" + files[i];
             }
         }
@@ -219,7 +229,7 @@ function getThumbFromRawDir(raw) {
 }
 
 function getThumbFromAlbumDir(dir) {
-    //    console.log("getThumbFromAlbumDir", dir);
+    console.log("getThumbFromAlbumDir", dir);
     // dir should be an album dir containing other album/chapter dirs
     // so we call getThumb on each dir till we find an image
     return readDir(dir).then(function(files) {
@@ -230,7 +240,7 @@ function getThumbFromAlbumDir(dir) {
             }
             var file = files[i++];
             file = dir + "/" + file;
-            //            console.log("getThumbFromAlbumDir.nextFile", file);
+            console.log("getThumbFromAlbumDir.nextFile", file);
             return isDirectory(file).then(function(isDir) {
                 if (isDir) {
                     return getThumb(file).then(function(file) {
@@ -249,13 +259,13 @@ function getThumbFromAlbumDir(dir) {
 }
 
 function getThumb(dir) {
-    //    console.log("getThumb", dir);
+    console.log("getThumb", dir);
     var semaphores = [];
     semaphores.push(hasAlbumSemaphore(dir));
     semaphores.push(hasChapterSemaphore(dir));
 
     return Promise.all(semaphores).then(function(results) {
-        //        console.log("getThumb.all.results", results);
+        console.log("getThumb.all.results", results);
         var isAlbum = results[0];
         var isChapter = results[1];
         if (isAlbum) {
@@ -284,7 +294,36 @@ function getPics(dir, page) {
         })
         .then(function(pics) {
             return pageSelector(pics, page);
+        })
+        .then(function(pics) {
+            return addDescriptions(pics);
         });
+}
+function addDescriptions(pics) {
+    var texts = [];
+    var semaphores = [];
+    pics.forEach(function(pic) {
+        var txt = pic.image.replace("/raw", "/txt").replace(/$/, ".txt");
+        texts.push(txt);
+        semaphores.push(pathExists(txt));
+    });
+
+    return Promise.all(semaphores).then(function(results) {
+        var semaphores2 = [];
+        var indexes = [];
+        for (var i = 0; i < results.length; i++) {
+            if (results[i]) {
+                indexes.push(i); // remember which have text
+                semaphores2.push(readFile(texts[i]));
+            }
+        }
+        return Promise.all(semaphores2).then(function(results2) {
+            for (var i = 0; i < indexes.length; i++) {
+                pics[indexes[i]]["txt"] = results2[i];
+            }
+            return pics;
+        });
+    });
 }
 
 function getDirs(dir) {
@@ -325,7 +364,7 @@ function getDirs(dir) {
                 });
             })
             .catch(function(e) {
-                //console.log('readDir Promise e', e);
+                console.log("readDir Promise e", e);
             });
     });
 }
@@ -363,7 +402,7 @@ function getDirsAndThumbs(dir, page) {
             return pageSelector(dirs, page);
         })
         .then(function(dirs) {
-            //            console.log("getDirsAndThumbs.then", dirs);
+            console.log("getDirsAndThumbs.then", dirs);
             var promises = [];
             dirs.forEach(function(subdir) {
                 if (dir && "." != dir) {
@@ -373,7 +412,7 @@ function getDirsAndThumbs(dir, page) {
                 }
             });
             return Promise.all(promises).then(function(thumbs) {
-                //                console.log("getDirsAndThumbs Promises.all", thumbs);
+                console.log("getDirsAndThumbs Promises.all", thumbs);
                 var results = [];
                 for (var i = 0; i < dirs.length; i++) {
                     results.push({ dir: dirs[i], image: thumbs[i] });
@@ -399,12 +438,12 @@ function photoAlbum(dir, page) {
 
         if (isAlbum) {
             return getDirsAndThumbs(dir, page).then(function(results) {
-                //                console.log("getDirs.then", results);
+                console.log("getDirs.then", results);
                 return { type: "album", results: results };
             });
         } else if (isChapter) {
             return getPics(dir, page).then(function(pics) {
-                //                console.log("getPics.then", pics);
+                console.log("getPics.then", pics);
                 return { type: "chapter", results: pics };
             });
         } else {
