@@ -9,8 +9,13 @@
     "babel": "babel src/cli/es2015 -d dist",
     "wpbuild": "webpack --progress --colors",
     "wpwatch": "webpack --progress --colors --watch",
-    "wpdev": "webpack-dev-server --progress --colors"
+    "wpdev": "webpack-dev-server --progress --colors",
+    "test0": "bash test/test0.sh",
+    "test1": "bash test/test1.sh"
   },
+  "pre-commit": [
+    "test0","test1"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -36,6 +41,7 @@
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-injector": "^1.1.0",
-    "grunt-shell": "^2.1.0"
+    "grunt-shell": "^2.1.0",
+    "pre-commit": "^1.2.2"
   }
 }
