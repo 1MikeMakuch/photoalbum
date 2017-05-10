@@ -7,7 +7,7 @@ http.createServer(function (req, res) {
     res.statusCode = 404
     res.end('no such location')
   })
-}).listen(7777)
+}).listen(7776)
  
 handler.on('error', function (err) {
   console.error('Error:', err.message)
@@ -25,4 +25,8 @@ handler.on('issues', function (event) {
     event.payload.action,
     event.payload.issue.number,
     event.payload.issue.title)
+})
+ 
+handler.on('*', function (event) {
+  console.log('Received an event', event);
 })
