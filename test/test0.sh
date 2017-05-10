@@ -1,4 +1,4 @@
 
-echo "Hello, test0!"
+echo "Hello again, test0!"
 exit 0
 
