@@ -61,9 +61,8 @@ var photoalbum = (function() {
                 $('#loading').hide()
                 unbindScroll()
             }
-            if (result.summary) {
-                $('.summary').html(result.summary)
-            }
+
+            $('.summary').html(result.summary)
 
             var photos = ''
 
@@ -305,7 +304,7 @@ function emitPhoto(dir, type, img, mediaQuery) {
     }
 
     if (img.txt) {
-        captionText = img.txt
+        captionText = img.txt.substr(0, 50)
         captionClass += ' caption-bold '
     }
 
