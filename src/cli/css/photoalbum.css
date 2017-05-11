@@ -1,16 +1,5 @@
 
-.thumbnail {
-    width: 100px;
-}
 
-#breadcrumbs {
-    display              : inline-block;
-    margin               : auto;
-    text-align           : center;
-    width                : 60%;
-    text-decoration      : none;
-
-}
 a:-webkit-any-link {
     text-decoration      : none;
 }
@@ -49,6 +38,14 @@ a:-webkit-any-link {
     background-color     : black;
 }
 
+#breadcrumbs {
+    display              : inline-block;
+    margin               : auto;
+    text-align           : center;
+    width                : 60%;
+    text-decoration      : none;
+
+}
 .breadcrumbs a: active
 .breadcrumbs a: hover,
 .breadcrumbs a: link,
@@ -136,12 +133,6 @@ a:-webkit-any-link {
 .resize-sizers {
     cursor               : pointer;
 }
-
-/*
-   .resize-sizers: active {
-
-   }
- */
 
 .resize-sizers: hover {
     outline: 2px;
