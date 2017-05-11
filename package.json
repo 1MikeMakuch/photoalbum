@@ -2,16 +2,12 @@
   "name": "photoalbum",
   "version": "1.0.0",
   "description": "photo album",
-  "main": "srv/photoalbumServer.js",
+  "main": "srv/photoalbum.js",
   "scripts": {
-    "build": "babel && make",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "babel": "babel src/cli/es2015 -d dist",
-    "wpbuild": "webpack --progress --colors",
-    "wpwatch": "webpack --progress --colors --watch",
-    "wpdev": "webpack-dev-server --progress --colors",
     "test0": "bash test/test0.sh",
-    "test1": "bash test/test1.sh"
+    "test1": "bash test/test1.sh",
+    "start": "bower install ; npm install ; grunt dev ; grunt watch"
   },
   "pre-commit": [
     "test0",

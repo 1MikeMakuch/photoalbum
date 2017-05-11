@@ -1,0 +1,21 @@
+#!/bin/sh
+
+#git --work-tree=/home/mkm/virtuals/mike/httpdocs/photoalbum --git-dir=/home/mkm/virtuals/mike/httpdocs/photoalbum/.git checkout -f
+
+set -x
+
+git --work-tree=/home/mkm/virtuals/mike/httpdocs/photoalbum --git-dir=/home/mkm/virtuals/mike/httpdocs/photoalbum/.git pull
+
+cd /home/mkm/virtuals/mike/httpdocs/photoalbum 
+bower install
+npm install
+grunt dev
+
+# using nodemon don't need a restart
+#sudo systemctl restart nodepa
+
+set +x
+
+echo "Hooray, the new version is published! Hopefully"
+
+
