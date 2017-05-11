@@ -10,12 +10,6 @@
 // main entry point, render markup for all photos in page N of dir
 //////////////////////////////////////////////////////////////////
 
-// <picture>
-// <source srcset="img_smallflower.jpg" media="(max-width: 400px)">
-// <source srcset="img_flowers.jpg">
-// <img src="img_flowers.jpg" alt="Flowers">
-// </picture>
-
 var photoalbum = (function() {
     // Just a little private data
     var DIR = ''
@@ -113,7 +107,7 @@ function bindScroll() {
         var top = $(window).scrollTop() || $('body').scrollTop()
         var diff = $(document).height() - win.height()
 
-        //      console.log( "scroll", $(document).height(), win.height(), diff, top, top+100);
+        // console.log( "scroll", $(document).height(), win.height(), diff, top, top+100);
         // not sure why have to add 100 to top but otherwise it sometimes never hits bottom
         if ($(document).height() - win.height() <= top + 100) {
             console.log('hit bottom!!!!!')
@@ -300,7 +294,6 @@ function emitPhoto(dir, type, img, mediaQuery) {
         captionText = imgPath.replace(/.*\//, '')
         frameClass = 'polaroid-frame'
         shadowClass = 'polaroid-shadow'
-        swipeboxClose = '</a>'
     }
 
     if (img.txt) {
@@ -310,6 +303,7 @@ function emitPhoto(dir, type, img, mediaQuery) {
 
     if ('chapter' == type) {
         swipeboxElement = `<a href="${imgSwipebox}" class="swipebox" title="${captionText}">`
+        swipeboxClose = '</a>'
     }
 
     photo = `
