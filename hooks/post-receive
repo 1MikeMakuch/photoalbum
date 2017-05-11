@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# This script lives in the bare repo on beech, which gets pushes for deployment
+# to the live site. This script actually performs the deployment below.
+
 #git --work-tree=/home/mkm/virtuals/mike/httpdocs/photoalbum --git-dir=/home/mkm/virtuals/mike/httpdocs/photoalbum/.git checkout -f
 
 set -x
