@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# This script sits in each devs repo in .git/hooks, it exectues any tests defined in package.json "pre-commit"
+# and prevents commits before passing tests.
+
+./node_modules/pre-commit/hook
+RESULT=$?
+[ $RESULT -ne 0 ] && exit 1
+exit 0
