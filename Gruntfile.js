@@ -92,12 +92,12 @@ module.exports = function(grunt) {
                         dest: "dist/cli/js/uiconfig.js"
                     },
                     {
-                        src: "src/cli/js/jquery.swipebox.js",
-                        dest: "bower_components/swipebox/src/js/jquery.swipebox.js"
-                    },
-                    {
                         src: "bower_components/**",
                         dest: "dist/cli/"
+                    },
+                    {
+                        src: "src/cli/js/jquery.swipebox.js",
+                        dest: "dist/cli/bower_components/swipebox/src/js/jquery.swipebox.js"
                     },
                     {
                         expand: true,
