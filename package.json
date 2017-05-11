@@ -7,9 +7,11 @@
     "babel": "babel src/cli/es2015 -d dist",
     "test0": "bash test/test0.sh",
     "test1": "bash test/test1.sh",
-    "start": "bower install ; npm install ; grunt dev ; grunt watch"
+    "start": "bower install ; npm install ; grunt dev ; grunt watch",
+    "precommit-banner": "echo \"running pre-commit stuff\""
   },
   "pre-commit": [
+    "precommit-banner",
     "test0",
     "test1"
   ],
