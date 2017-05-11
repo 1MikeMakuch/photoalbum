@@ -1,6 +1,5 @@
 
-echo "Hello again again, test0!"
-echo "Hello again again, test0!"
+echo "Hello again again, test 7!"
 
 exit 0
 
