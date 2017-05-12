@@ -33,10 +33,18 @@ var app = express()
 var cors = require('cors')
 var sleep = require('sleep')
 var querystring = require('querystring')
+var moment = require('moment')
 
 var config = require('../../config/index.js')
 
-console.log('config', config)
+function dlog(msgin, ...restArgs) {
+    var stamp = moment().format('YYMMDD-HHMMSS')
+    var msg = stamp + ' ' + msgin
+    var a = [msg].concat(restArgs)
+    console.log.apply(console, a)
+}
+
+dlog('config', config)
 
 app.use(cors())
 
@@ -50,27 +58,27 @@ process.chdir(config.apiDocroot)
 app.set('query parser', true)
 
 app.get('/', function(req, res) {
-    console.log('Hello, world!')
+    dlog('Hello, world!')
     res.send('Hello, world!\n')
 })
 
 // Handle just /query/
 app.get('/query/', function(req, res) {
-    console.log('\n', req.url, req.query)
+    dlog('/query/', req.url, req.query)
 
     return verifyDir('.', req.query)
         .then(function(vres) {
             return photoAlbum('.', req.query['page'])
         })
         .then(function(dirs) {
-            console.log(dirs)
+            dlog('/query/.then', dirs)
             res.send(dirs)
         })
 })
 
 // Handle arbitrary paths following /query/
 app.get(/^\/query\/((?:[^\/]+\/?)+)\/*/, function(req, res) {
-    console.log('\n', req.url, req.query)
+    dlog('/query/', req.url, req.query)
 
     var dir = req.params[0].split('/')
     dir = dir.join('/')
@@ -81,11 +89,11 @@ app.get(/^\/query\/((?:[^\/]+\/?)+)\/*/, function(req, res) {
             return photoAlbum(dir, req.query['page'])
         })
         .then(function(dirs) {
-            console.log('\n', dirs)
+            dlog('/query/.then', dirs)
             res.send(dirs)
         })
         .catch(function(e) {
-            console.log('caught', e)
+            dlog('caught', e)
             res.status(404).send('not found')
         })
 })
@@ -94,7 +102,7 @@ app.use(express.static('./'))
 
 // error handler to emit errors as a json string
 app.use(function(err, req, res, next) {
-    console.log('error!', err)
+    dlog('error!', err)
     if (typeof err !== 'object') {
         // If the object is not an Error, create a representation that appears to be
         err = {
@@ -112,7 +120,7 @@ app.use(function(err, req, res, next) {
 
 // 404 is not an express.js error, just the last route
 app.use(function(req, res, next) {
-    console.log('404')
+    dlog('404')
     res.status(404).send("Sorry can't find that!")
 })
 
@@ -120,7 +128,7 @@ var port = process.env.PORT || 10101
 
 app.listen(port)
 
-console.log('listening on ' + port)
+dlog('listening on ' + port)
 
 function pathExists(path) {
     return fs
@@ -140,7 +148,7 @@ function readDir(path) {
             return files
         })
         .catch(function(e) {
-            console.log('readdir error', e)
+            dlog('readdir error', e)
             return []
         })
 }
@@ -151,7 +159,7 @@ function readFile(path) {
             return file
         })
         .catch(function(err) {
-            //            console.log(err);
+            //            dlog(err);
             throw err
         })
 }
@@ -163,7 +171,7 @@ function isDirectory(path) {
             return stats.isDirectory()
         })
         .catch(function(e) {
-            console.log('isDirectory()', e)
+            dlog('isDirectory()', e)
             return false
         })
 }
@@ -191,13 +199,8 @@ function verifyDir(dir, queryString) {
             return result
         })
         .catch(function(e) {
-            console.log(e)
+            dlog(e)
         })
-
-    // will never get here
-    //console.log('end verifyDirP');
-    throw 'should never get here'
-    return false
 }
 
 function hasAlbumSemaphore(dir) {
@@ -214,13 +217,12 @@ function validImage(file) {
     return file.match(/jpg$|gif$|bmp$|png$/i)
 }
 function getThumbFromRawDir(raw) {
-    console.log('getThumbFromRawDir', raw)
+    dlog('getThumbFromRawDir', raw)
     // TODO need to optimize here instead of reading all files in dir should iterate 1 at a time
     return readDir(raw).then(function(files) {
-        var l = files.length
-        for (var i = 0; i < l; i++) {
+        for (var i = 0; i < files.length; i++) {
             if (validImage(files[i])) {
-                console.log(' getThumbFromRawDir', raw + '/' + files[i])
+                dlog(' getThumbFromRawDir', raw + '/' + files[i])
                 return raw + '/' + files[i]
             }
         }
@@ -229,7 +231,7 @@ function getThumbFromRawDir(raw) {
 }
 
 function getThumbFromAlbumDir(dir) {
-    console.log('getThumbFromAlbumDir', dir)
+    dlog('getThumbFromAlbumDir', dir)
     // dir should be an album dir containing other album/chapter dirs
     // so we call getThumb on each dir till we find an image
     return readDir(dir).then(function(files) {
@@ -240,7 +242,7 @@ function getThumbFromAlbumDir(dir) {
             }
             var file = files[i++]
             file = dir + '/' + file
-            console.log('getThumbFromAlbumDir.nextFile', file)
+            dlog('getThumbFromAlbumDir.nextFile', file)
             return isDirectory(file).then(function(isDir) {
                 if (isDir) {
                     return getThumb(file).then(function(file) {
@@ -259,13 +261,13 @@ function getThumbFromAlbumDir(dir) {
 }
 
 function getThumb(dir) {
-    console.log('getThumb', dir)
+    dlog('getThumb', dir)
     var semaphores = []
     semaphores.push(hasAlbumSemaphore(dir))
     semaphores.push(hasChapterSemaphore(dir))
 
     return Promise.all(semaphores).then(function(results) {
-        console.log('getThumb.all.results', results)
+        dlog('getThumb.all.results', results)
         var isAlbum = results[0]
         var isChapter = results[1]
         if (isAlbum) {
@@ -380,7 +382,7 @@ function getDirs(dir) {
                 })
             })
             .catch(function(e) {
-                console.log('readDir Promise e', e)
+                dlog('readDir Promise e', e)
             })
     })
 }
@@ -418,7 +420,7 @@ function getDirsAndThumbs(dir, page) {
             return pageSelector(dirs, page)
         })
         .then(function(dirs) {
-            console.log('getDirsAndThumbs.then', dirs)
+            dlog('getDirsAndThumbs.then', dirs)
             var promises = []
             dirs.forEach(function(subdir) {
                 if (dir && '.' != dir) {
@@ -428,7 +430,7 @@ function getDirsAndThumbs(dir, page) {
                 }
             })
             return Promise.all(promises).then(function(thumbs) {
-                console.log('getDirsAndThumbs Promises.all', thumbs)
+                dlog('getDirsAndThumbs Promises.all', thumbs)
                 var results = []
                 for (var i = 0; i < dirs.length; i++) {
                     results.push({dir: dirs[i], image: thumbs[i]})
@@ -439,7 +441,7 @@ function getDirsAndThumbs(dir, page) {
 }
 
 function photoAlbum(dir, page) {
-    console.log('photoAlbum', dir, page, process.cwd())
+    dlog('photoAlbum', dir, page, process.cwd())
 
     var isAlbum
     var isChapter
@@ -454,13 +456,13 @@ function photoAlbum(dir, page) {
 
         if (isAlbum) {
             return getDirsAndThumbs(dir, page).then(function(results) {
-                console.log('getDirs.then', results)
+                dlog('getDirs.then', results)
                 return {type: 'album', results: results}
             })
         } else if (isChapter) {
             return getPics(dir, page)
                 .then(function(pics) {
-                    console.log('getPics.then', pics)
+                    dlog('getPics.then', pics)
                     return pics
                 })
                 .then(function(pics) {
@@ -469,7 +471,7 @@ function photoAlbum(dir, page) {
                     })
                 })
                 .then(function(obj) {
-                    console.log('obj', obj)
+                    dlog('photoAlbum.then', obj)
                     if (obj.summary) {
                         return {
                             type: 'chapter',
@@ -490,58 +492,58 @@ function photoAlbum(dir, page) {
 //
 //pathExists('albums')
 //.then(function(x) {
-//    console.log('\npathExists',x)
+//    dlog('\npathExists',x)
 //});
 //
 //
 //readDir('albums')
 //    .then(function(x) {
-//        console.log('readDir',x);
+//        dlog('readDir',x);
 //    });
 //
 //
 //isDirectory('albums')
 //    .then(function(x) {
-//        console.log('\nisDirectory', x);
+//        dlog('\nisDirectory', x);
 //    });
 //
 //
 //verifyDir('hobbies')
 //    .then(function(x) {
-//        console.log('\nverifyDir', x);
+//        dlog('\nverifyDir', x);
 //    });
 //
 //hasAlbumSemaphore('albums')
 //    .then(function(x) {
-//        console.log('\nhasAlbumSemaphore', x);
+//        dlog('\nhasAlbumSemaphore', x);
 //    });
 //
 //hasChapterSemaphore('albums/hobbies')
 //    .then(function(x) {
-//        console.log('\nhasChapterSemaphore', x);
+//        dlog('\nhasChapterSemaphore', x);
 //    });
 //
 //getThumb('albums')
 //    .then(function(x) {
-//        console.log('\ngetThumb:', x);
+//        dlog('\ngetThumb:', x);
 //    });
 //
 //getPics('albums/hobbies/scuba')
 //    .then(function(x) {
-//        console.log('\ngetPics', x);
+//        dlog('\ngetPics', x);
 //    });
 //
 //getDirs(arg)
 //  .then(function(x) {
-//      console.log('getDirs',x);
+//      dlog('getDirs',x);
 //  });
 //
 //getDirsAndThumbs(arg)
 //  .then(function(x) {
-//      console.log('getDirsAndThumbs',x);
+//      dlog('getDirsAndThumbs',x);
 //  });
 //
 //dirList(arg)
 //    .then(function(x) {
-//        console.log('dirList', x);
+//        dlog('dirList', x);
 //    });
