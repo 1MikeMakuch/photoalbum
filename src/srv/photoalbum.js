@@ -37,9 +37,20 @@ var moment = require('moment')
 
 var config = require('../../config/index.js')
 
-function dlog(msgin, ...restArgs) {
+function dlog(msgin) {
     var stamp = moment().format('YYMMDD-HHMMSS')
     var msg = stamp + ' ' + msgin
+
+    for (
+        var _len = arguments.length,
+            restArgs = Array(_len > 1 ? _len - 1 : 0),
+            _key = 1;
+        _key < _len;
+        _key++
+    ) {
+        restArgs[_key - 1] = arguments[_key]
+    }
+
     var a = [msg].concat(restArgs)
     console.log.apply(console, a)
 }
