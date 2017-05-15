@@ -12,7 +12,7 @@
 
 var photoalbum = (function() {
     // Just a little private data
-    var DIR = '2015'
+    var DIR = ''
     var page = -1
     var lastdir = ''
 
@@ -528,16 +528,40 @@ function swipeboxInit() {
     })(jQuery)
 }
 
-var burger = (function() {
+var xburger = (function() {
     var visible = false
-    var burgerMenu = document.getElementById('burgerDropdown')
+    var burgerMenu = document.getElementById('burger-dropdown')
 
     return function() {
         burgerMenu.classList.toggle('show')
         burgerMenu.classList.toggle('hide')
-        console.log('burgerMenu', burgerMenu)
     }
 })()
+var burger = (function() {
+    var visible = false
+    var burgerMenu = document.getElementById('burger-dropdown')
+
+    return {
+        toggle: function() {
+            burgerMenu.classList.toggle('show')
+            burgerMenu.classList.toggle('hide')
+        },
+        hide: function() {
+            if (burgerMenu.classList.contains('show')) {
+                burgerMenu.classList.remove('show')
+                burgerMenu.classList.add('hide')
+            }
+        },
+    }
+})()
+
+// Close the dropdown if the user clicks outside of it
+window.onclick = function(event) {
+    dlog('onclick', event.target)
+    if (!event.target.matches('.burger') && !event.target.matches('.patty')) {
+        burger.hide()
+    }
+}
 
 $(document).ready(function() {
     photoalbum()
