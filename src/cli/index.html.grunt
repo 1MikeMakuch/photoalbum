@@ -9,23 +9,51 @@
         <!-- injector:css -->
         <!-- endinjector -->
     </head>
-    <body background="img/book_bg2.jpg">
+    <body class="grad0">
 
-        <header>
-            <div class="title">Mike's Photo Album</div>
-            <div class="controls">
-                <div class="resize-controls">
-                    <div class="resize-header">Image size:</div>
 
-                    <button class="resize-sizers resize-enlarge"
-                            onclick="resize.enlarge();" ></button>
-                    <button class="resize-sizers resize-reduce"
-                            onclick="resize.reduce();"></button>
+
+        <header class="lighbg">
+            <div class="leftheader">
+
+                <div class="title">Mike's Photo Albums</div>
+
+                <div class="controls">
+                    <div class="resize-controls">
+                        <!-- <div class="resize-header">Image size:</div> -->
+
+                        <button class="resize-sizers resize-enlarge"
+                                onclick="resize.enlarge();" ></button>
+                        <button class="resize-sizers resize-reduce"
+                                onclick="resize.reduce();"></button>
+                    </div>
                 </div>
                 <div id="breadcrumbs" class="breadcrumbs" ></div>
             </div>
+
+
+            <div class="rightheader">
+
+                    <div class="burger" onclick="burger();">
+                        <div class="patty"></div>
+                        <div class="patty"></div>
+                        <div class="patty"></div>
+                    </div>
+
+                    <div id="burgerDropdown" class="dropdown hide">
+                        <div id="myDropdown" class="dropdown-content">
+                            <a href="#home">Home</a>
+                            <a href="#about">About</a>
+                            <a href="#contact">Contact</a>
+                        </div>
+                    </div>
+
+
+            </div>
+
         </header>
-<p/>
+
+        <p/>
         <div class="summary"></div>
 
         <div class="photos"></div>

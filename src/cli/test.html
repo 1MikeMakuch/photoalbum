@@ -6,45 +6,370 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Mike's Photoalbum</title>
-        <!-- injector:css -->
-        <link rel="stylesheet" href="bower_components/swipebox/src/css/swipebox.css">
-        <!-- endinjector -->
+        <style>
+
+
+            a:-webkit-any-link {
+                text-decoration      : none;
+            }
+
+            .album-caption {
+                background-color     : black;
+                color                : white;
+                display              : block;
+                font-size            : large;
+                height               : auto;
+                margin-top           : 5px;
+                text-align           : center;
+                width                : auto;
+            }
+
+            .album-frame {
+                /* order of these border props matters! border needs to be first */
+                border               : 25px solid transparent;
+                border-image         : url(/img/Album.png) 12% round;
+                -o-border-image      : url(/img/Album.png) 12% round;
+                -webkit-border-image : url(/img/Album.png) 12% round;
+                display              : inline-block;
+                font-size            : 0;
+                margin               : 40px;
+            }
+
+            .album-image {
+                border               : 1px solid gray;
+                display              : inline-block;
+                position             : relative;
+            }
+
+            .album-shadow {
+                box-shadow           : 15px 15px 8px 20px rgba(0,0,0,0.2);
+                display              : inline-block;
+                background-color     : black;
+            }
+
+            .burger {
+                float: right;
+                margin-top: 10px;
+                cursor: pointer;
+            }
+
+            .dropdown {
+                float: right;
+                position: absolute;
+                top: 60px;
+                z-index: 1;
+            }
+
+            .dropdown-content {
+                background-color: #f9f9f9;
+                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                position: relative;
+            }
+
+            .dropdown-content a {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+            }
+
+            .dropdown a:hover {background-color: #f1f1f1}
+
+            .show {display:block;}
+            .hide {display:none;}
+
+            .grad0 {
+                background: #aaaaaa; /* For browsers that do not support gradients */
+                background: -webkit-linear-gradient(left, #cccccc , #eeeeee); /* For Safari 5.1 to 6.0 */
+                background: -o-linear-gradient(right, #cccccc , #eeeeee); /* For Opera 11.1 to 12.0 */
+                background: -moz-linear-gradient(right, #cccccc , #eeeeee); /* For Firefox 3.6 to 15 */
+                background: linear-gradient(to right, #cccccc , #eeeeee); /* Standard syntax */
+            }
+            .grad1 {
+                background: #eeeeee; /* For browsers that do not support gradients */
+                background: -webkit-linear-gradient(left, red , yellow); /* For Safari 5.1 to 6.0 */
+                background: -o-linear-gradient(right, #eeeeee , #cccccc); /* For Opera 11.1 to 12.0 */
+                background: -moz-linear-gradient(right, #eeeeee , #cccccc); /* For Firefox 3.6 to 15 */
+                background: linear-gradient(to right, #eeeeee , #cccccc); /* Standard syntax */
+            }
+
+            header {
+                /*     box-sizing           : border-box; */
+                background-color: #eeeeee;
+                width                : 100%;
+                height: 70px;
+                /*     padding: 10px; */
+                /*     margin-top: 2px; */
+            }
+            .leftheader {
+                float: left;
+                width: 90%;
+                border: 1px solid black;
+                box-sizing           : border-box;
+            }
+            .rightheader {
+                float: right;
+                width: 10%;
+                border: 1px solid black;
+                box-sizing           : border-box;
+            }
+            .thinline {
+                height: 4px;
+                width: 100%;
+
+            }
+            .title {
+                display              : block;
+                font-size            : 1.5em;
+                text-align: left;
+            }
+
+
+            .mat {
+                border-color         : white;
+                border-style         : solid;
+                border-width         : 10px;
+                display              : inline-block;
+                height               : auto;
+                padding              : 0;
+                width                : auto;
+            }
+
+            .matbutton {
+                cursor               : pointer;
+            }
+
+            .photo {
+                display              : block;
+                height               : 140px;
+                width                : auto;
+            }
+            .photos {
+                display              : inline-block;
+                text-align           : center;
+
+            }
+
+            .polaroid-caption {
+                background-color     : white;
+                color                : #d0d0d0;
+                display              : block;
+                font-size            : small;
+                height               : auto;
+                margin-top           : 0;
+                text-align           : center;
+                width                : 100%;
+            }
+            .caption-bold {
+                color : black;
+            }
+
+            .polaroid-frame {
+                background-color     : white;
+                border-color         : white;
+                border-style         : solid;
+                border-width         : 2px;
+                box-shadow           : 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+                box-sizing           : border-box;
+                display              : inline-block;
+                height               : auto;
+                margin               : 20px;
+                vertical-align       : top;
+                width                : auto;
+            }
+            .polaroid-buffer {
+                display: inline-block;
+                font-size: 0;
+            }
+
+            .patty {
+                width: 30px;
+                height: 4px;
+                background-color: #b0b0b0;
+                margin: 6px 0;
+            }
+
+
+            #breadcrumbs {
+                display              : block;
+                /*     margin               : auto; */
+                /*     text-align           : center; */
+                width                : 90%;
+                text-decoration      : none;
+                text-align: left;
+                margin-top: 5px;
+
+            }
+            .breadcrumbs a: active
+            .breadcrumbs a: hover,
+            .breadcrumbs a: link,
+            .breadcrumbs a: visited,
+            {
+                color                : black;
+                display              : inline-block;
+                font-size            : large;
+                /*     text-align           : center; */
+                text-decoration      : none;
+            }
+
+            .controls {
+                display              : inline-block;
+                float: left;
+                text-align           : left;
+                position: relative;
+                margin-top: 5px;
+
+            }
+
+            .resize-controls {
+                display              : inline-block;
+                width                : 20%;
+            }
+
+            .resize-header {
+                display              : inline-block;
+                vertical-align: top;
+            }
+
+            .resize-sizers {
+                cursor               : pointer;
+            }
+
+            .resize-sizers: hover {
+                outline: 2px;
+            }
+
+            .resize-enlarge {
+                border-bottom  : 7px solid #555555;
+                border-left    : 7px solid transparent;
+                border-right   : 7px solid transparent;
+                display        : inline-block;
+                height         : 0;
+                left           : 0;
+                top            : 10px;
+                vertical-align : top;
+                width          : 0;
+            }
+
+            .resize-reduce {
+                border-left    : 7px solid transparent;
+                border-right   : 7px solid transparent;
+                border-top     : 7px solid #555555;
+                display        : inline-block;
+                height         : 0;
+                left           : 0px;
+                position       : relative;
+                top            : -5px;
+                vertical-align : top;
+                width          : 0;
+            }
+
+
+
+            body {
+                /*     background-color     : #d0d0d0; */
+                background           : url(/img/book_bg2.jpg);
+                margin               : 0;
+                text-align           : center;
+                width: 100%;
+
+            }
+
+            button {
+                /* zero out button */
+                -moz-box-sizing    : border-box;
+                -webkit-box-sizing : border-box;
+                background         : none;
+                border             : none;
+                box-sizing         : border-box;
+                display            : inline-block;
+                line-height        : 1;
+                margin             : 0;
+                outline            : none;
+                overflow           : visible;
+                padding            : 0;
+                vertical-align     : middle;
+                white-space        : normal;
+                width              : auto;
+            }
+
+
+
+            @media only screen and (max-width: 640px) {
+                /* switch to block to force 1 per row, then we need shadow to be block too
+                   so it takes full width of album-frame */
+
+                .album-frame {
+                    display: block;
+                    margin: 10px;
+                }
+                .album-shadow {
+                    display: block;
+                }
+                .polaroid-frame {
+                    display              : block;
+                    margin               : 10px;
+                }
+                .controls {
+                    display:  none;
+                }
+            }
+
+            @media only screen and (max-width: 640px) and (orientation: landscape) {
+                .photo {
+                    max-height: 60vh;
+                }
+            }
+
+            @media only screen and (max-width: 640px) and (orientation: portrait) {
+                .photo {
+                    height: auto;
+                    max-width: 70vw;
+                }
+            }
+
+        </style>
     </head>
-    <body background="img/book_bg2.jpg">
+    <body class="grad0">
 
-        <header>
-            <div class="title">Mike's Photo Album</div>
-            <div class="controls">
-                <div class="resize-controls">
-                    <div class="resize-header">Image size:</div>
+        <header class="lighbg">
+            <div class="leftheader">
 
-                    <button class="resize-sizers resize-enlarge"
-                            onclick="resize.enlarge();" ></button>
-                    <button class="resize-sizers resize-reduce"
-                            onclick="resize.reduce();"></button>
+                <div class="title">Mike's Photo Albums</div>
+
+                <div class="controls">
+                    <div class="resize-controls">
+
+                        <button class="resize-sizers resize-enlarge"
+                                onclick="resize.enlarge();" ></button>
+                        <button class="resize-sizers resize-reduce"
+                                onclick="resize.reduce();"></button>
+                    </div>
                 </div>
                 <div id="breadcrumbs" class="breadcrumbs" ></div>
             </div>
+
+            <div class="rightheader">
+
+                <div class="burger" onclick="burger();">
+                    <div class="patty"></div>
+                    <div class="patty"></div>
+                    <div class="patty"></div>
+                </div>
+
+                <div id="burgerDropdown" class="dropdown hide">
+                    <div id="myDropdown" class="dropdown-content">
+                        <a href="#home">Home</a>
+                        <a href="#about">About</a>
+                        <a href="#contact">Contact</a>
+                    </div>
+                </div>
+
+
+            </div>
+
         </header>
 
-        <a href="http://pa.localhost/albums/2015/SixtyNine-Firebird/1000/00000259.jpg" class="swipebox">
-            <img src="http://pa.localhost/albums/2015/SixtyNine-Firebird/1000/00000259.jpg" width="200"></a>
-            <div class="xphotos"></div>
-
-
-            <div id="loading">Loading...</div>
-
-            <!-- injector:js -->
-            <script src="bower_components/jquery/dist/jquery.min.js"></script>
-            <script src="bower_components/swipebox/src/js/jquery.swipebox.js"></script>
-            <script src="bower_components/swipebox/lib/ios-orientationchange-fix.js"></script>
-            <!-- endinjector -->
-
-            <!--        <div style="visible: false" class="swipebox"></div> -->
-            <script>
-                $(document).ready(function() {
-                    $(".swipebox").swipebox();
-                });
-            </script>
+        <p/>
     </body>
 </html>

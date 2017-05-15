@@ -12,7 +12,7 @@
 
 var photoalbum = (function() {
     // Just a little private data
-    var DIR = ''
+    var DIR = '2015'
     var page = -1
     var lastdir = ''
 
@@ -55,7 +55,7 @@ var photoalbum = (function() {
                 $('#loading').hide()
                 unbindScroll()
             }
-
+            $('.summary').html('')
             $('.summary').html(result.summary)
 
             var photos = ''
@@ -150,7 +150,7 @@ function createBreadcrumbs(arg) {
     var dirs = arg.split('/')
     var breadcrumbs = `<a class="breadcrumbs" href="#" onclick="photoalbum('',0);">HOME</a>`
     if (!arg) {
-        return breadcrumbs
+        return '' // breadcrumbs
     }
     var link = ''
     dirs.forEach(function(dir) {
@@ -284,6 +284,7 @@ function emitPhoto(dir, type, img, mediaQuery) {
         captionText = captionAlbum(imgDir)
         frameClass = 'album-frame'
         shadowClass = 'album-shadow'
+        bufferClass = shadowClass
 
         path = (dir ? dir + '/' : '') + imgDir
         onclick = ` onclick="photoalbum('${path}',0);" `
@@ -457,25 +458,25 @@ var resize = (function() {
     function enlargeEnable() {
         $('.resize-enlarge').prop('disabled', false)
         $('.resize-enlarge').css({
-            'border-bottom': '10px solid black',
+            'border-bottom': '10px solid #555555',
         })
     }
     function enlargeDisable() {
         $('.resize-enlarge').prop('disabled', true)
         $('.resize-enlarge').css({
-            'border-bottom': '10px solid gray',
+            'border-bottom': '10px solid #909090',
         })
     }
     function reduceDisable() {
         $('.resize-reduce').prop('disabled', true)
         $('.resize-reduce').css({
-            'border-top': '10px solid gray',
+            'border-top': '10px solid #909090',
         })
     }
     function reduceEnable() {
         $('.resize-reduce').prop('disabled', false)
         $('.resize-reduce').css({
-            'border-top': '10px solid black',
+            'border-top': '10px solid #555555',
         })
     }
 
@@ -527,6 +528,17 @@ function swipeboxInit() {
     })(jQuery)
 }
 
+var burger = (function() {
+    var visible = false
+    var burgerMenu = document.getElementById('burgerDropdown')
+
+    return function() {
+        burgerMenu.classList.toggle('show')
+        burgerMenu.classList.toggle('hide')
+        console.log('burgerMenu', burgerMenu)
+    }
+})()
+
 $(document).ready(function() {
     photoalbum()
     //    var html = "";
@@ -547,3 +559,10 @@ $(document).ready(function() {
     //    $(".photos").html(html);
     swipeboxInit()
 })
+
+function dlog(msgin, ...restArgs) {
+    var stamp = moment().format('YYMMDD-HHMMSS')
+    var msg = stamp + ' ' + msgin
+    var a = [msg].concat(restArgs)
+    console.log.apply(console, a)
+}

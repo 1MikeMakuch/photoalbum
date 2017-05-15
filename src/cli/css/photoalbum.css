@@ -38,30 +38,81 @@ a:-webkit-any-link {
     background-color     : black;
 }
 
-#breadcrumbs {
-    display              : inline-block;
-    margin               : auto;
-    text-align           : center;
-    width                : 60%;
-    text-decoration      : none;
-
-}
-.breadcrumbs a: active
-.breadcrumbs a: hover,
-.breadcrumbs a: link,
-.breadcrumbs a: visited,
-{
-    color                : black;
-    display              : inline-block;
-    font-size            : large;
-    text-align           : center;
-    text-decoration      : none;
+.burger {
+    float: right;
+    margin-top: 10px;
+    cursor: pointer;
 }
 
-.controls {
+
+.dropdown {
+    float: right;
+    position: absolute;
+    right: 5px;
+    top: 60px;
+    z-index: 1;
+}
+
+.dropdown-content {
+    background-color: #f9f9f9;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    position: relative;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown a:hover {background-color: #f1f1f1}
+
+.show {display:block;}
+.hide {display:none;}
+
+.grad0 {
+    background: #aaaaaa; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(left, #cccccc , #eeeeee); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(right, #cccccc , #eeeeee); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(right, #cccccc , #eeeeee); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(to right, #cccccc , #eeeeee); /* Standard syntax */
+}
+.grad1 {
+    background: #eeeeee; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(left, red , yellow); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(right, #eeeeee , #cccccc); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(right, #eeeeee , #cccccc); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(to right, #eeeeee , #cccccc); /* Standard syntax */
+}
+
+header {
+/*     box-sizing           : border-box; */
+    background-color: #eeeeee;
+    width                : 100%;
+    height: 70px;
+/*     padding: 10px; */
+/*     margin-top: 2px; */
+}
+.leftheader {
+    float: left;
+    width: 90%;
+}
+.rightheader {
+    float: right;
+    width: 10%;
+}
+.thinline {
+    height: 4px;
+    width: 100%;
+
+}
+.title {
     display              : block;
-    text-align           : left;
+    font-size            : 1.5em;
+    text-align: left;
 }
+
 
 .mat {
     border-color         : white;
@@ -120,6 +171,45 @@ a:-webkit-any-link {
     font-size: 0;
 }
 
+.patty {
+    width: 30px;
+    height: 4px;
+    background-color: #b0b0b0;
+    margin: 6px 0;
+}
+
+
+#breadcrumbs {
+    display              : block;
+    /*     margin               : auto; */
+    /*     text-align           : center; */
+    width                : 90%;
+    text-decoration      : none;
+    text-align: left;
+    margin-top: 5px;
+
+}
+.breadcrumbs a: active
+.breadcrumbs a: hover,
+.breadcrumbs a: link,
+.breadcrumbs a: visited,
+{
+    color                : black;
+    display              : inline-block;
+    font-size            : large;
+    /*     text-align           : center; */
+    text-decoration      : none;
+}
+
+.controls {
+    display              : inline-block;
+    float: left;
+    text-align           : left;
+    position: relative;
+    margin-top: 5px;
+
+}
+
 .resize-controls {
     display              : inline-block;
     width                : 20%;
@@ -139,39 +229,39 @@ a:-webkit-any-link {
 }
 
 .resize-enlarge {
-    border-bottom  : 10px solid black;
-    border-left    : 10px solid transparent;
-    border-right   : 10px solid transparent;
+    border-bottom  : 7px solid #555555;
+    border-left    : 7px solid transparent;
+    border-right   : 7px solid transparent;
     display        : inline-block;
     height         : 0;
     left           : 0;
-    top            : 0;
+    top            : 10px;
     vertical-align : top;
     width          : 0;
 }
 
 .resize-reduce {
-    border-left    : 10px solid transparent;
-    border-right   : 10px solid transparent;
-    border-top     : 10px solid black;
+    border-left    : 7px solid transparent;
+    border-right   : 7px solid transparent;
+    border-top     : 7px solid #555555;
     display        : inline-block;
     height         : 0;
-    left           : -24px;
+    left           : 0px;
     position       : relative;
-    top            : 20px;
+    top            : -5px;
     vertical-align : top;
     width          : 0;
 }
 
-.title {
-    display              : block;
-    font-size            : 2em;
-}
+
 
 body {
-    background-color     : #d0d0d0;
+/*     background-color     : #d0d0d0; */
+    background           : url(/img/book_bg2.jpg);
     margin               : 0;
     text-align           : center;
+    width: 100%;
+
 }
 
 button {
@@ -192,10 +282,6 @@ button {
     width              : auto;
 }
 
-header {
-    text-align           : center;
-    width                : 100%;
-}
 
 
 @media only screen and (max-width: 640px) {
@@ -213,8 +299,8 @@ header {
         display              : block;
         margin               : 10px;
     }
-    .resize-controls {
-        visibility: hidden;
+    .controls {
+        display:  none;
     }
 }
 
