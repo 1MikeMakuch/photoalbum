@@ -9,30 +9,20 @@
         <!-- injector:css -->
         <!-- endinjector -->
     </head>
-    <body class="grad0">
+    <body>
+        <div class="container">
 
+            <header class="grad0" >
+                <div class="leftheader">
 
+                    <div class="title">Mike's Photo Albums</div>
+                    <div style="height:20px;"></div>
 
-        <header class="lighbg">
-            <div class="leftheader">
-
-                <div class="title">Mike's Photo Albums</div>
-
-                <div class="controls">
-                    <div class="resize-controls">
-                        <!-- <div class="resize-header">Image size:</div> -->
-
-                        <button class="resize-sizers resize-enlarge"
-                                onclick="resize.enlarge();" ></button>
-                        <button class="resize-sizers resize-reduce"
-                                onclick="resize.reduce();"></button>
-                    </div>
+                    <div id="breadcrumbs" class="breadcrumbs" ></div>
                 </div>
-                <div id="breadcrumbs" class="breadcrumbs" ></div>
-            </div>
 
 
-            <div class="rightheader">
+                <div class="rightheader">
 
                     <div class="burger" onclick="burger.toggle();">
                         <div class="patty"></div>
@@ -42,26 +32,37 @@
 
                     <div id="burger-dropdown" class="dropdown hide">
                         <div id="myDropdown" class="dropdown-content">
-                            <a href="#login">Login</a>
-                            <a href="#about">About</a>
-                            <a href="#contact">Contact</a>
+
+                            <div style="display:inline-block">
+                                <div style="display:inline-block">
+                                    Resize
+                                </div>
+
+                                <div style="display:inline-block">
+                                    <div class="resize-controls">
+                                        <button class="resize-sizers resize-enlarge"
+                                                onclick="resize.enlarge();" ></button>
+                                        <button class="resize-sizers resize-reduce"
+                                                onclick="resize.reduce();"></button>
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
+                </div>
+            </header>
 
+            <p/>
+            <div class="summary"></div>
 
-            </div>
+            <div class="photos"></div>
 
-        </header>
+            <div id="loading">Loading...</div>
 
-        <p/>
-        <div class="summary"></div>
+            <!-- injector:js -->
+            <!-- endinjector -->
 
-        <div class="photos"></div>
-
-        <div id="loading">Loading...</div>
-
-        <!-- injector:js -->
-        <!-- endinjector -->
-
+        </div>
     </body>
 </html>

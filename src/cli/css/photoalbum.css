@@ -1,8 +1,6 @@
 
 
-a:-webkit-any-link {
-    text-decoration      : none;
-}
+
 
 .album-caption {
     background-color     : black;
@@ -45,38 +43,20 @@ a:-webkit-any-link {
 }
 
 
-.dropdown {
-    float: right;
-    position: absolute;
-    right: 5px;
-    top: 60px;
-    z-index: 1;
-}
-
-.dropdown-content {
-    background-color: #f9f9f9;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    position: relative;
-}
-
-.dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-}
-
-.dropdown-content a:hover {background-color: #f1f1f1}
-
-.show {display:block;}
-.hide {display:none;}
-
-.grad0 {
+.xgrad0 {
     background: #aaaaaa; /* For browsers that do not support gradients */
     background: -webkit-linear-gradient(left, #cccccc , #eeeeee); /* For Safari 5.1 to 6.0 */
     background: -o-linear-gradient(right, #cccccc , #eeeeee); /* For Opera 11.1 to 12.0 */
     background: -moz-linear-gradient(right, #cccccc , #eeeeee); /* For Firefox 3.6 to 15 */
     background: linear-gradient(to right, #cccccc , #eeeeee); /* Standard syntax */
+    background: linear-gradient(to right, #64a7de , #4180b6); /* Standard syntax */
+}
+.grad0 {
+    background: #64a7de; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(#64a7de , #4180b6); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#64a7de , #4180b6); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#64a7de , #4180b6); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#64a7de , #4180b6); /* Standard syntax */
 }
 .grad1 {
     background: #eeeeee; /* For browsers that do not support gradients */
@@ -85,33 +65,55 @@ a:-webkit-any-link {
     background: -moz-linear-gradient(right, #eeeeee , #cccccc); /* For Firefox 3.6 to 15 */
     background: linear-gradient(to right, #eeeeee , #cccccc); /* Standard syntax */
 }
+body {
+    background-color: #e8e6e8;
+    /*     background           : url(/img/book_bg2.jpg); */
+    margin               : 0;
+    text-align           : center;
+    width: 100%;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+/*     font-family: "Lucida Grande", Verdana, Arial, sans-serif; */
 
+}
+
+.container {
+    background-color     : #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, .5);
+    padding: 8px;
+    margin: 40px;
+
+}
 header {
-/*     box-sizing           : border-box; */
-    background-color: #eeeeee;
-    width                : 100%;
-    height: 70px;
-/*     padding: 10px; */
-/*     margin-top: 2px; */
+    height: 170px;
+    border-radius: 10px;
+    margin: 10px;
+
 }
 .leftheader {
     float: left;
     margin-left: 1%;
     width: 89%;
+    position: relative;
+    top: 25%;
 }
 .rightheader {
     float: right;
     margin-right: 1%;
     width: 9%;
+    position: relative;
+    top: 70%;
+
 }
 .thinline {
-    height: 4px;
+    height: 10px;
     width: 100%;
 
 }
 .title {
+    color                : white;
     display              : block;
-    font-size            : 1.5em;
+    font-size            : 2em;
     text-align: left;
 }
 
@@ -132,7 +134,7 @@ header {
 
 .photo {
     display              : block;
-    height               : 140px;
+/*     height               : 140px; */
     width                : auto;
 }
 .photos {
@@ -176,41 +178,74 @@ header {
 .patty {
     width: 30px;
     height: 4px;
-    background-color: #b0b0b0;
+    background-color: #e0e0ff;
     margin: 6px 0;
 }
-
+a:-webkit-any-link {
+    text-decoration      : none;
+}
 
 #breadcrumbs {
     display              : block;
-    /*     margin               : auto; */
-    /*     text-align           : center; */
     width                : 90%;
     text-decoration      : none;
     text-align: left;
     margin-top: 5px;
+    color: white;
 
 }
-.breadcrumbs a: active
+.breadcrumbs
+{
+    color                : white;
+    display              : inline-block;
+    font-size            : medium;
+    text-decoration      : none;
+    font-style           : italic;
+}
+.breadcrumbs a: active,
 .breadcrumbs a: hover,
 .breadcrumbs a: link,
 .breadcrumbs a: visited,
 {
-    color                : black;
+    color                : white;
     display              : inline-block;
     font-size            : large;
-    /*     text-align           : center; */
     text-decoration      : none;
 }
 
+
 .controls {
-    display              : inline-block;
+    display              : block;
     float: left;
     text-align           : left;
     position: relative;
     margin-top: 5px;
-
 }
+.dropdown {
+    float: right;
+    position: absolute;
+    right: 5px;
+    top: 60px;
+    z-index: 1;
+}
+
+.dropdown-content {
+    background-color: #f9f9f9;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    position: relative;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+.show {display:block;}
+.hide {display:none;}
 
 .resize-controls {
     display              : inline-block;
@@ -231,40 +266,33 @@ header {
 }
 
 .resize-enlarge {
-    border-bottom  : 7px solid #555555;
-    border-left    : 7px solid transparent;
-    border-right   : 7px solid transparent;
+    border-bottom  : 10px solid #555555;
+    border-left    : 10px solid transparent;
+    border-right   : 10px solid transparent;
     display        : inline-block;
     height         : 0;
     left           : 0;
-    top            : 10px;
+    top            : 0px;
     vertical-align : top;
     width          : 0;
 }
 
 .resize-reduce {
-    border-left    : 7px solid transparent;
-    border-right   : 7px solid transparent;
-    border-top     : 7px solid #555555;
+    border-left    : 10px solid transparent;
+    border-right   : 10px solid transparent;
+    border-top     : 10px solid #555555;
     display        : inline-block;
     height         : 0;
     left           : 0px;
     position       : relative;
-    top            : -5px;
+    top            : 0px;
     vertical-align : top;
     width          : 0;
 }
 
 
 
-body {
-/*     background-color     : #d0d0d0; */
-    background           : url(/img/book_bg2.jpg);
-    margin               : 0;
-    text-align           : center;
-    width: 100%;
 
-}
 
 button {
     /* zero out button */
@@ -288,7 +316,8 @@ button {
 
 @media only screen and (max-width: 640px) {
     /* switch to block to force 1 per row, then we need shadow to be block too
-       so it takes full width of album-frame */
+    so it takes full width of album-frame. Also this makes the album borders all
+    the same width. */
 
     .album-frame {
         display: block;
@@ -298,8 +327,12 @@ button {
         display: block;
     }
     .polaroid-frame {
-        display              : block;
+        /* keep polaroid inline-block cause otherwise the white polaroid frame is too wide
+        on narrow images */
+
+        display              : inline-block;
         margin               : 10px;
+
     }
     .controls {
         display:  none;
@@ -308,6 +341,7 @@ button {
 
 @media only screen and (max-width: 640px) and (orientation: landscape) {
     .photo {
+        height: auto;
         max-height: 60vh;
     }
 }

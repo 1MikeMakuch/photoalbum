@@ -157,7 +157,7 @@ function createBreadcrumbs(arg) {
         link += (link ? '/' : '') + dir
         breadcrumbs +=
             (breadcrumbs ? ' / ' : '') +
-            `<a href="#" onclick="photoalbum('${link}',0);">${dir}</a>`
+            `<a class="breadcrumbs" href="#" onclick="photoalbum('${link}',0);">${dir}</a>`
     })
 
     return breadcrumbs
@@ -459,24 +459,28 @@ var resize = (function() {
         $('.resize-enlarge').prop('disabled', false)
         $('.resize-enlarge').css({
             'border-bottom': '10px solid #555555',
+            cursor: 'pointer',
         })
     }
     function enlargeDisable() {
         $('.resize-enlarge').prop('disabled', true)
         $('.resize-enlarge').css({
             'border-bottom': '10px solid #909090',
+            cursor: 'default',
         })
     }
     function reduceDisable() {
         $('.resize-reduce').prop('disabled', true)
         $('.resize-reduce').css({
             'border-top': '10px solid #909090',
+            cursor: 'default',
         })
     }
     function reduceEnable() {
         $('.resize-reduce').prop('disabled', false)
         $('.resize-reduce').css({
             'border-top': '10px solid #555555',
+            cursor: 'pointer',
         })
     }
 
@@ -528,15 +532,6 @@ function swipeboxInit() {
     })(jQuery)
 }
 
-var xburger = (function() {
-    var visible = false
-    var burgerMenu = document.getElementById('burger-dropdown')
-
-    return function() {
-        burgerMenu.classList.toggle('show')
-        burgerMenu.classList.toggle('hide')
-    }
-})()
 var burger = (function() {
     var visible = false
     var burgerMenu = document.getElementById('burger-dropdown')
@@ -558,7 +553,11 @@ var burger = (function() {
 // Close the dropdown if the user clicks outside of it
 window.onclick = function(event) {
     dlog('onclick', event.target)
-    if (!event.target.matches('.burger') && !event.target.matches('.patty')) {
+    if (
+        !event.target.matches('.burger') &&
+        !event.target.matches('.patty') &&
+        !event.target.matches('.resize-sizers')
+    ) {
         burger.hide()
     }
 }
