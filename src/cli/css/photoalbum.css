@@ -337,6 +337,14 @@ button {
     .controls {
         display:  none;
     }
+    .burger {
+        display: none;
+    }
+    .container {
+        padding: 2px;
+        margin: 10px;
+
+    }
 }
 
 @media only screen and (max-width: 640px) and (orientation: landscape) {
