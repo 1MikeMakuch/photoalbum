@@ -209,7 +209,7 @@ a:-webkit-any-link {
 {
     color                : white;
     display              : inline-block;
-    font-size            : large;
+    font-size            : medium;
     text-decoration      : none;
 }
 
@@ -344,6 +344,9 @@ button {
         padding: 2px;
         margin: 10px;
 
+    }
+    .title {
+        font-size            : 1.5em;
     }
 }
 
