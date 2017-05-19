@@ -14,3 +14,5 @@ config.uiServer = "http://pa.localhost/";
 config.assetsUrl = "http://pa.localhost/albums/";
 
 config.apiDocroot = "/Users/mkm/www/photoalbum/cli/albums/";
+
+config.pageSizeSmallDevice = 8;

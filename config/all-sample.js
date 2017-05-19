@@ -23,4 +23,6 @@ all.uiServer  = 'file:///Users/mkm/www/panode/cli/index.html';
 
 all.apiDocroot = '/Users/mkm/www/panode/srv/albums';
 
+all.pageSize = 31;
+
 module.exports = all;

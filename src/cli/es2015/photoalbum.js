@@ -44,8 +44,8 @@ var photoalbum = (function() {
         }
 
         var query = config.apiServer + '/query/' + dir + `?page=${page}`
-        if (smallDevice) {
-            query += '&pageSize=8'
+        if (smallDevice && config.pageSizeSmallDevice) {
+            query += `&pageSize=${config.pageSizeSmallDevice}`
         }
 
         spinner('busy')
