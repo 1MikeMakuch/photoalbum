@@ -11,10 +11,15 @@
 //////////////////////////////////////////////////////////////////
 
 var photoalbum = (function() {
-    // Just a little private data
+    // Private data
     var DIR = ''
     var page = -1
     var lastdir = ''
+    var mediaQuery = window.matchMedia('(max-width: 640px)')
+    var smallDevice = false
+    if (mediaQuery.matches) {
+        smallDevice = true
+    }
 
     return function(dir) {
         if (undefined === dir) {
@@ -39,6 +44,9 @@ var photoalbum = (function() {
         }
 
         var query = config.apiServer + '/query/' + dir + `?page=${page}`
+        if (smallDevice) {
+            query += '&pageSize=8'
+        }
 
         spinner('busy')
 
@@ -49,7 +57,6 @@ var photoalbum = (function() {
 
         function handleApiResponse(result) {
             console.log('result', result)
-            var mediaQuery = window.matchMedia('(max-width: 640px)')
 
             if (!result.results.length) {
                 $('#loading').hide()
@@ -65,8 +72,9 @@ var photoalbum = (function() {
                     return photoAlbumSort(result.type, a, b)
                 })
                 .forEach(function(img) {
-                    photos += emitPhoto(dir, result.type, img, mediaQuery)
+                    photos += emitPhoto(dir, result.type, img, smallDevice)
                 })
+
             if (page) {
                 $('.photos').append(photos)
             } else {
@@ -221,7 +229,7 @@ function captionAlbum(img) {
 //
 // emit markup for a single photo
 //
-function emitPhoto(dir, type, img, mediaQuery) {
+function emitPhoto(dir, type, img, smallDevice) {
     var path = ''
     var captionText = ''
     var onclick = ''
@@ -261,7 +269,7 @@ function emitPhoto(dir, type, img, mediaQuery) {
     )
 
     var imgSwipebox, imgThumbnail
-    if (mediaQuery.matches) {
+    if (smallDevice) {
         imgSwipebox = imgSwipeboxMobile
         imgThumbnail = imgThumbnailMobile
     } else {
@@ -319,106 +327,6 @@ function emitPhoto(dir, type, img, mediaQuery) {
                 </div>
             </div>
         `
-
-    return photo
-}
-
-function xemitPhoto(dir, type, img, mediaQuery) {
-    var path = ''
-    var captionText = ''
-    var onclick = ''
-    var photo = ''
-
-    // desktop: thumb 1000, swipe raw
-    // mobile: thumb 640,   swipe 1000
-
-    const sizeThumbnailMobile = '/640/'
-    const sizeThumbnailDesktop = '/1000/'
-    const sizeSwipeboxMobile = '/1000/'
-    const sizeSwipeboxDesktop = '/raw/'
-
-    var imgDir = img['dir'] || ''
-    var imgPath = img['image'] || ''
-
-    // console.log("imgPath", imgPath);
-    if (!imgPath) {
-        return ''
-    }
-
-    var imgThumbnailMobile = String(config.assetsUrl + imgPath).replace(
-        '/raw/',
-        sizeThumbnailMobile
-    )
-    var imgThumbnailDesktop = String(config.assetsUrl + imgPath).replace(
-        '/raw/',
-        sizeThumbnailDesktop
-    )
-    var imgSwipeboxMobile = String(config.assetsUrl + imgPath).replace(
-        '/raw/',
-        sizeSwipeboxMobile
-    )
-    var imgSwipeboxDesktop = String(config.assetsUrl + imgPath).replace(
-        '/raw/',
-        sizeSwipeboxDesktop
-    )
-
-    var imgSwipebox, imgThumbnail
-    if (mediaQuery.matches) {
-        imgSwipebox = imgSwipeboxMobile
-        imgThumbnail = imgThumbnailMobile
-    } else {
-        imgSwipebox = imgSwipeboxDesktop
-        imgThumbnail = imgThumbnailDesktop
-    }
-
-    if ('album' == type) {
-        path = (dir ? dir + '/' : '') + imgDir
-        captionText = captionAlbum(imgDir)
-        onclick = ` onclick="photoalbum('${path}',0);" `
-
-        var captionClass = 'polaroid-caption'
-
-        if (img.txt) {
-            captionText = img.txt
-        }
-
-        photo = `
-            <div class="album-frame">
-                <div class="album-shadow" >
-                    <div class="mat matbutton">
-                        <img ${onclick} class="photo" src="${imgThumbnail}" />
-                    </div>
-                    <div class="album-caption">${captionText}</div>
-                </div>
-            </div>
-        `
-    } else if ('chapter' == type) {
-        // Polaroid, for now just use file name w/out leading path
-        var imgId = imgPath.replace(/.*\//, '')
-        captionText = imgId
-        var captionClass = 'polaroid-caption'
-
-        if (img.txt) {
-            captionText = img.txt
-            captionClass += ' polaroid-bold '
-        }
-
-        photo = `
-            <div class="polaroid-frame">
-                <div class="polaroid-buffer">
-                    <div class="mat">
-                      <a href="${imgSwipebox}" class="swipebox" title="${captionText}">
-                          <img ${onclick} class="photo" src="${imgThumbnail}" />
-                      </a>
-                    </div>
-                    <div class="${captionClass}">${captionText}</div>
-                </div>
-            </div>
-        `
-    } else {
-        console.log('epic fail')
-        alert('epic fail')
-    }
 
     return photo
 }

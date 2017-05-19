@@ -79,6 +79,9 @@ app.get('/query/', function(req, res) {
 
     return verifyDir('.', req.query)
         .then(function(vres) {
+            if (req.query['pageSize']) {
+                config.pageSize = req.query['pageSize']
+            }
             return photoAlbum('.', req.query['page'])
         })
         .then(function(dirs) {
@@ -97,6 +100,9 @@ app.get(/^\/query\/((?:[^\/]+\/?)+)\/*/, function(req, res) {
 
     return verifyDir(dir, req.query)
         .then(function(vres) {
+            if (req.query['pageSize']) {
+                config.pageSize = req.query['pageSize']
+            }
             return photoAlbum(dir, req.query['page'])
         })
         .then(function(dirs) {
@@ -200,7 +206,8 @@ function verifyDir(dir, queryString) {
 
     if (
         !queryString ||
-        ('page' in queryString && !isNumeric(queryString['page']))
+        ('page' in queryString && !isNumeric(queryString['page'])) ||
+        ('pageSize' in queryString && !isNumeric(queryString['pageSize']))
     ) {
         return Promise.reject(new Error('bad query string'))
     }
