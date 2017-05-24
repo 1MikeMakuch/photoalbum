@@ -23,8 +23,6 @@ module.exports = function(grunt) {
         'dist/cli/bower_components/swipebox/src/js/jquery.swipebox.js',
         'dist/cli/bower_components/swipebox/lib/ios-orientationchange-fix.js',
         'dist/cli/css/photoalbum.css',
-        // 'dist/cli/css/photoalbum-kubrickdark.css',
-        // 'dist/cli/css/photoalbum-kubrickblue.css',
         'dist/cli/bower_components/swipebox/src/css/swipebox.css',
         'dist/cli/bower_components/moment/min/moment.min.js',
     ]
@@ -132,6 +130,7 @@ module.exports = function(grunt) {
                             'book_bg2.jpg',
                             'icons.png',
                             'loader.gif',
+                            'polaroidstack.png',
                         ],
                         dest: 'dist/cli/img/',
                     },

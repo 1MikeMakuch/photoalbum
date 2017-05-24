@@ -10,6 +10,7 @@
         <!-- endinjector -->
         <link rel="stylesheet" href="css/photoalbum-kubrickdark.css" title="kubrickdark" disabled>
         <link rel="stylesheet" href="css/photoalbum-kubrickblue.css" title="kubrickblue" disabled>
+        <link rel="stylesheet" href="css/photoalbum-polaroidstack.css" title="polaroidstack" disabled>
     </head>
     <body>
         <div class="container">
@@ -39,6 +40,8 @@
                                 <form>
                                     <input type="submit" onclick="switchStyle('kubrickblue');return false;" name="theme" value="Blue Theme" id="kubrickblue">
                                     <input type="submit" onclick="switchStyle('kubrickdark');return false;" name="theme" value="Dark Theme" id="kubrickdark">
+
+                                    <input type="submit" onclick="switchStyle('polaroidstack');return false;" name="theme" value="Polaroid Stack" id="polaroidstack">
                                 </form>
 
                                 <div style="display:inline-block">

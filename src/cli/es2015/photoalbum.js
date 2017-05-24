@@ -291,7 +291,7 @@ function emitPhoto(dir, type, img, smallDevice) {
         captionClass = 'album-caption'
         captionText = captionAlbum(imgDir)
         frameClass = 'album-frame'
-        shadowClass = 'album-shadow'
+        shadowClass = '' // 'album-shadow'
         bufferClass = shadowClass
 
         path = (dir ? dir + '/' : '') + imgDir
