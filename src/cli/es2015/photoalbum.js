@@ -530,6 +530,9 @@ function styleEnable(cssTitle) {
     }
 }
 function setStoredStyle() {
+    if (!localStorage.photoalbumStyle) {
+        localStorage.photoalbumStyle = 'polaroidstack'
+    }
     if (localStorage.photoalbumStyle) {
         switchStyle(localStorage.photoalbumStyle)
     }
