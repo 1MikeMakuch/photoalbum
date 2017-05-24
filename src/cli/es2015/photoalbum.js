@@ -246,7 +246,6 @@ function emitPhoto(dir, type, img, smallDevice) {
     var imgDir = img['dir'] || ''
     var imgPath = img['image'] || ''
 
-    // console.log("imgPath", imgPath);
     if (!imgPath) {
         return ''
     }
@@ -276,6 +275,7 @@ function emitPhoto(dir, type, img, smallDevice) {
         imgSwipebox = imgSwipeboxDesktop
         imgThumbnail = imgThumbnailDesktop
     }
+    //    console.log('small?', smallDevice, imgThumbnail, imgSwipebox)
 
     var bufferClass = ''
     var buttonClass = ''
@@ -471,6 +471,7 @@ window.onclick = function(event) {
 }
 
 $(document).ready(function() {
+    setStoredStyle()
     photoalbum()
     //    var html = "";
     //    html += "screen.availLeft " + screen.availLeft + "\n";
@@ -496,4 +497,63 @@ function dlog(msgin, ...restArgs) {
     var msg = stamp + ' ' + msgin
     var a = [msg].concat(restArgs)
     console.log.apply(console, a)
+}
+
+function styleDisable(cssTitle) {
+    var i, linkTag
+    for (
+        (i = 0), (linkTag = document.getElementsByTagName('link'));
+        i < linkTag.length;
+        i++
+    ) {
+        if (
+            linkTag[i].rel.indexOf('stylesheet') != -1 &&
+            cssTitle === linkTag[i].title
+        ) {
+            linkTag[i].disabled = true
+        }
+    }
+}
+function styleEnable(cssTitle) {
+    var i, linkTag
+    for (
+        (i = 0), (linkTag = document.getElementsByTagName('link'));
+        i < linkTag.length;
+        i++
+    ) {
+        if (
+            linkTag[i].rel.indexOf('stylesheet') != -1 &&
+            cssTitle === linkTag[i].title
+        ) {
+            linkTag[i].disabled = false
+        }
+    }
+}
+function setStoredStyle() {
+    if (localStorage.photoalbumStyle) {
+        switchStyle(localStorage.photoalbumStyle)
+    }
+}
+function switchStyle(cssTitle) {
+    console.log('switchStyle', cssTitle)
+    var i, linkTag
+    for (
+        (i = 0), (linkTag = document.getElementsByTagName('link'));
+        i < linkTag.length;
+        i++
+    ) {
+        if (linkTag[i].rel.indexOf('stylesheet') != -1 && linkTag[i].title) {
+            linkTag[i].disabled = true
+        }
+
+        if (
+            linkTag[i].rel.indexOf('stylesheet') != -1 &&
+            cssTitle === linkTag[i].title
+        ) {
+            if (linkTag[i].title == cssTitle) {
+                linkTag[i].disabled = false
+                localStorage.setItem('photoalbumStyle', cssTitle)
+            }
+        }
+    }
 }

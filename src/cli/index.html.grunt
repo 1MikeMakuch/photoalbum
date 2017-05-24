@@ -8,6 +8,8 @@
         <title>Mike's Photoalbum</title>
         <!-- injector:css -->
         <!-- endinjector -->
+        <link rel="stylesheet" href="css/photoalbum-kubrickdark.css" title="kubrickdark" disabled>
+        <link rel="stylesheet" href="css/photoalbum-kubrickblue.css" title="kubrickblue" disabled>
     </head>
     <body>
         <div class="container">
@@ -34,6 +36,11 @@
                         <div id="myDropdown" class="dropdown-content">
 
                             <div style="display:inline-block">
+                                <form>
+                                    <input type="submit" onclick="switchStyle('kubrickblue');return false;" name="theme" value="Blue Theme" id="kubrickblue">
+                                    <input type="submit" onclick="switchStyle('kubrickdark');return false;" name="theme" value="Dark Theme" id="kubrickdark">
+                                </form>
+
                                 <div style="display:inline-block">
                                     Resize
                                 </div>

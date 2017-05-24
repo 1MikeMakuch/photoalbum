@@ -23,6 +23,8 @@ module.exports = function(grunt) {
         'dist/cli/bower_components/swipebox/src/js/jquery.swipebox.js',
         'dist/cli/bower_components/swipebox/lib/ios-orientationchange-fix.js',
         'dist/cli/css/photoalbum.css',
+        // 'dist/cli/css/photoalbum-kubrickdark.css',
+        // 'dist/cli/css/photoalbum-kubrickblue.css',
         'dist/cli/bower_components/swipebox/src/css/swipebox.css',
         'dist/cli/bower_components/moment/min/moment.min.js',
     ]
@@ -113,8 +115,12 @@ module.exports = function(grunt) {
                         dest: 'dist/srv/photoalbum.js',
                     },
                     {
-                        src: 'src/cli/css/photoalbum.css',
-                        dest: 'dist/cli/css/photoalbum.css',
+                        expand: true,
+                        cwd: 'src/cli/css/',
+                        dest: 'dist/cli/css/',
+                        flatten: true,
+                        filter: 'isFile',
+                        src: '*.css',
                     },
                     {
                         expand: true,
