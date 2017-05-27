@@ -54,6 +54,13 @@
     background: linear-gradient(to right, #cccccc , #eeeeee); /* Standard syntax */
     background: linear-gradient(to right, #64a7de , #4180b6); /* Standard syntax */
 }
+.xxxgrad0 {
+    background: #64a7de; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(#64a7de , #4180b6); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#64a7de , #4180b6); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#64a7de , #4180b6); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#64a7de , #4180b6); /* Standard syntax */
+}
 .grad0 {
     background: #64a7de; /* For browsers that do not support gradients */
     background: -webkit-linear-gradient(#64a7de , #4180b6); /* For Safari 5.1 to 6.0 */
@@ -74,7 +81,7 @@ body {
     margin               : 0;
     text-align           : center;
     width: 100%;
-    font-family: "Comic Sans MS", cursive, sans-serif;
+    font-family: "Comic Sans MS", Arial, sans-serif;
 /*     font-family: "Lucida Grande", Verdana, Arial, sans-serif; */
 
 }
