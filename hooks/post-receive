@@ -19,7 +19,7 @@ set -x
 
 wd=$(pwd)
 
-dirs="/home/mkm/virtuals/mike/httpdocs/randm /home/mkm/virtuals/mike/httpdocs/photos /home/mkm/virtuals/mike/httpdocs/spa"
+dirs="/home/mkm/virtuals/mike/httpdocs/photos /home/mkm/virtuals/mike/httpdocs/spa"
 
 for dir in $dirs
 do
