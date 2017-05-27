@@ -28,9 +28,9 @@ set -x
 cd $dir
 pwd
 git --work-tree=$dir --git-dir=$dir/.git pull
-#bower install
-#npm install
-#grunt dev 
+bower install
+npm install
+grunt dev 
 set +x 
 done
 
