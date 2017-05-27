@@ -10,6 +10,13 @@
 // main entry point, render markup for all photos in page N of dir
 //////////////////////////////////////////////////////////////////
 
+// hack to be able to pass in a dir to start with i.e. <url>/?GDIR=<dir>
+var GDIR = ''
+var urlVars = getUrlVars()
+if (urlVars.GDIR) {
+    GDIR = urlVars.GDIR
+}
+
 var photoalbum = (function() {
     // Private data
     var DIR = ''
@@ -20,6 +27,10 @@ var photoalbum = (function() {
     if (mediaQuery.matches) {
         smallDevice = true
     }
+    if (GDIR) {
+        DIR = GDIR
+    }
+    console.log('DIR', DIR)
 
     return function(dir) {
         if (undefined === dir) {
@@ -27,6 +38,7 @@ var photoalbum = (function() {
         } else {
             DIR = dir
         }
+
         $('#breadcrumbs').html(createBreadcrumbs(dir))
 
         if (dir == lastdir) {
@@ -470,9 +482,25 @@ window.onclick = function(event) {
         burger.hide()
     }
 }
+// Read a page's GET URL variables and return them as an associative array.
+function getUrlVars() {
+    var vars = [], hash
+    var hashes = window.location.href
+        .slice(window.location.href.indexOf('?') + 1)
+        .split('&')
+
+    // hacked to strip out the #s from the query
+    for (var i = 0; i < hashes.length; i++) {
+        hash = hashes[i].split('=')
+        vars.push(hash[0].replace('#', ''))
+        vars[hash[0].replace('#', '')] = hash[1].replace('#', '')
+    }
+    return vars
+}
 
 $(document).ready(function() {
     setStoredStyle()
+
     photoalbum()
     //    var html = "";
     //    html += "screen.availLeft " + screen.availLeft + "\n";
