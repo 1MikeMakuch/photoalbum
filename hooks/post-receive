@@ -25,13 +25,13 @@ for dir in $dirs
 do
 echo ; echo ; echo 
 set -x
-cd $dir
-pwd
-git pull
-#bower install
-#npm install
-#grunt dev
-set +x
+(cd $dir ; \
+pwd ; \
+git pull ; \
+#bower install ; \
+#npm install ; \
+#grunt dev )
+set +x 
 done
 
 # using nodemon don't need a restart
