@@ -25,12 +25,12 @@ for dir in $dirs
 do
 echo ; echo ; echo 
 set -x
-(cd $dir ; \
-pwd ; \
-git pull ; \
-#bower install ; \
-#npm install ; \
-#grunt dev )
+cd $dir
+pwd
+git --work-tree=$dir --git-dir=$dir/.git pull
+#bower install
+#npm install
+#grunt dev 
 set +x 
 done
 
