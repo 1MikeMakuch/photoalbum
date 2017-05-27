@@ -492,8 +492,11 @@ function getUrlVars() {
     // hacked to strip out the #s from the query
     for (var i = 0; i < hashes.length; i++) {
         hash = hashes[i].split('=')
-        vars.push(hash[0].replace('#', ''))
-        vars[hash[0].replace('#', '')] = hash[1].replace('#', '')
+        vars.push(String(hash[0]).replace('#', ''))
+        vars[String(hash[0]).replace('#', '')] = String(hash[1]).replace(
+            '#',
+            ''
+        )
     }
     return vars
 }

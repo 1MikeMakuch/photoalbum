@@ -37,15 +37,16 @@
                         <div id="myDropdown" class="dropdown-content">
 
                             <div style="display:inline-block">
+                                Themes:
                                 <form>
                                     <!-- <input type="submit" onclick="switchStyle('kubrickblue');return false;" name="theme" value="Blue Theme" id="kubrickblue"> -->
                                     <input type="submit" onclick="switchStyle('kubrickdark');return false;" name="theme" value="Albums" id="kubrickdark">
 
                                     <input type="submit" onclick="switchStyle('polaroidstack');return false;" name="theme" value="Polaroid Stack" id="polaroidstack">
                                 </form>
-
+                                <hr>
                                 <div style="display:inline-block">
-                                    Resize
+                                    Size images:
                                 </div>
 
                                 <div style="display:inline-block">
