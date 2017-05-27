@@ -315,6 +315,7 @@ function emitPhoto(dir, type, img, smallDevice) {
         swipeboxClose = '</a>'
     }
 
+    // Begging for a template framework..
     photo = `
             <div class="${frameClass}">
                 <div class="${bufferClass}">

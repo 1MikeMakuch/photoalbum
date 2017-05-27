@@ -38,8 +38,8 @@
 
                             <div style="display:inline-block">
                                 <form>
-                                    <input type="submit" onclick="switchStyle('kubrickblue');return false;" name="theme" value="Blue Theme" id="kubrickblue">
-                                    <input type="submit" onclick="switchStyle('kubrickdark');return false;" name="theme" value="Dark Theme" id="kubrickdark">
+                                    <!-- <input type="submit" onclick="switchStyle('kubrickblue');return false;" name="theme" value="Blue Theme" id="kubrickblue"> -->
+                                    <input type="submit" onclick="switchStyle('kubrickdark');return false;" name="theme" value="Albums" id="kubrickdark">
 
                                     <input type="submit" onclick="switchStyle('polaroidstack');return false;" name="theme" value="Polaroid Stack" id="polaroidstack">
                                 </form>

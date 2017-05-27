@@ -141,7 +141,7 @@ app.use(function(req, res, next) {
     res.status(404).send("Sorry can't find that!")
 })
 
-var port = process.env.PORT || 10101
+var port = process.env.PORT || config.port || 10101
 
 app.listen(port)
 

@@ -15,12 +15,24 @@ fi
 
 set -x
 
-git --work-tree=/home/mkm/virtuals/mike/httpdocs/photoalbum --git-dir=/home/mkm/virtuals/mike/httpdocs/photoalbum/.git pull
+#git --work-tree=/home/mkm/virtuals/mike/httpdocs/photoalbum --git-dir=/home/mkm/virtuals/mike/httpdocs/photoalbum/.git pull
 
-cd /home/mkm/virtuals/mike/httpdocs/photoalbum 
-bower install
-npm install
-grunt dev
+wd=$(pwd)
+
+dirs="/home/mkm/virtuals/mike/httpdocs/photoalbum /home/mkm/virtuals/mike/httpdocs/photos /home/mkm/virtuals/mike/httpdocs/spa"
+
+for dir in $dirs
+do
+echo ; echo ; echo 
+set -x
+cd $dir
+pwd
+git pull
+#bower install
+#npm install
+#grunt dev
+set +x
+done
 
 # using nodemon don't need a restart
 #sudo systemctl restart nodepa
@@ -30,4 +42,5 @@ set +x
 echo "Hooray, the new version is published! Hopefully"
 
 # Finally update self!
+cd $wd
 cp hooks/post-receive /home/mkm/photoalbum.git/hooks 
