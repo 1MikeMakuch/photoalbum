@@ -19,7 +19,7 @@ set -x
 
 wd=$(pwd)
 
-dirs="/home/mkm/virtuals/mike/httpdocs/photoalbum /home/mkm/virtuals/mike/httpdocs/photos /home/mkm/virtuals/mike/httpdocs/spa"
+dirs="/home/mkm/virtuals/mike/httpdocs/randm /home/mkm/virtuals/mike/httpdocs/photos /home/mkm/virtuals/mike/httpdocs/spa"
 
 for dir in $dirs
 do
@@ -41,6 +41,6 @@ set +x
 
 echo "Hooray, the new version is published! Hopefully"
 
-# Finally update self!
-cd $wd
+# Finally update self! Have to do this cause the hooks dir in the git repo isn't under git control
+cd /home/mkm/virtuals/mike/httpdocs/spa
 cp hooks/post-receive /home/mkm/photoalbum.git/hooks 
