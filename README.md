@@ -1,7 +1,7 @@
 # photoalbum
 photoalbum is a simple node/express app to let a user browse hierarchically organized sets of photos. Currently it's in a useable state but it's display only, you have to load the photos to the server manually.
 
-It doesn't use much on the client except jquery and swipebox. It's responsive. Basically I wanted to learn a little CSS3 and used this project to do so.
+It doesn't use much on the client except a little jquery and a module called swipebox for the full screen photo swiping on mobile. It's responsive. 
 
 Here's a sample site:
 
